@@ -107,9 +107,9 @@ Au total 4 développeurs seront sur le projet :
 ## Annexes
 
 Ci-suivant quelques maquettes de l'application afin d'avoir une idée globale du projet et de l'aspect :
-![Liste des conversations](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_conversation-list.png)
-![Exemple d'une conversation](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_conversation-example.png)
-![Liste des groupes](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_group-list.png)
-![Détail d'un groupe](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_group-detail.png)
-![Liste des contacts](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_contact-list.png)
-![Profil de l'utilisateur connecté](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_users-profil.png)
+![Liste des conversations](https://github.com/FlorianLeveil/TP_DEV_MOBIL/tree/main/images/maquettes/iPhone_X-XS_conversation-list.png)
+![Exemple d'une conversation](https://github.com/FlorianLeveil/TP_DEV_MOBIL/tree/main/images/maquettes/iPhone_X-XS_conversation-example.png)
+![Liste des groupes](https://github.com/FlorianLeveil/TP_DEV_MOBIL/tree/main/images/maquettes/iPhone_X-XS_group-list.png)
+![Détail d'un groupe](https://github.com/FlorianLeveil/TP_DEV_MOBIL/tree/main/images/maquettes/iPhone_X-XS_group-detail.png)
+![Liste des contacts](https://github.com/FlorianLeveil/TP_DEV_MOBIL/tree/main/images/maquettes/iPhone_X-XS_contact-list.png)
+![Profil de l'utilisateur connecté](https://github.com/FlorianLeveil/TP_DEV_MOBIL/tree/main/images/maquettes/iPhone_X-XS_users-profil.png)
