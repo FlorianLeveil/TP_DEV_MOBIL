@@ -1,7 +1,0 @@
-{
-  "name": "TP_1",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}

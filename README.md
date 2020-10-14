@@ -16,7 +16,7 @@
 ----
 ## Mise en situation
 
-Pendant notre cour DEV-MOBILE de notre troisième année chez Ynov Campus, nous avons eu besoin de trouver une application mobile a fair* Notre groupe de 4 étudiants a décider de faire leur version d’une messagerie entre utilisateur depuis leur mobile. Cette application a pour but de nous faire pratiquer dans la technologie de IONIC et nous familiariser avec le développement pour mobile.
+Pendant notre cours de Développement Mobile Cross-Plateforme de notre troisième année chez Ynov Campus, nous avons eu besoin de trouver une application mobile à faire. Notre groupe de 4 étudiants a décidé de faire leur propre version d’une messagerie entre utilisateurs depuis leur mobile ou un navigateur. Cette application a pour but de nous faire pratiquer dans la technologie de IONIC et nous familiariser avec le développement pour mobile.
 
 ----
 ## Objectif
@@ -105,3 +105,11 @@ Au total 4 développeurs seront sur le projet :
 * Le projet sera disponible en intégralité sur le GitHub suivant : https://github.com/FlorianLeveil/TP_DEV_MOBIL
 
 ## Annexes
+
+Ci-suivant quelques maquettes de l'application afin d'avoir une idée globale du projet et de l'aspect :
+![Liste des conversations](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_conversation-list.png)
+![Exemple d'une conversation](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_conversation-example.png)
+![Liste des groupes](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_group-list.png)
+![Détail d'un groupe](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_group-detail.png)
+![Liste des contacts](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_contact-list.png)
+![Profil de l'utilisateur connecté](https://github.com/FlorianLeveil/TP_DEV_MOBIL/master/images/maquettes/iPhone_X-XS_users-profil.png)
