@@ -5,13 +5,13 @@
 ### Sommaire
 
 * [Mise en situation](https://github.com/FlorianLeveil/TP_DEV_MOBIL#mise-en-situation)
-* Objectif
-* Cahier des charges
-* Ressources
+* [Objectif](https://github.com/FlorianLeveil/TP_DEV_MOBIL#objectif)
+* [Cahier des charges](https://github.com/FlorianLeveil/TP_DEV_MOBIL#cahier-des-charges
+* [Ressources](https://github.com/FlorianLeveil/TP_DEV_MOBIL#ressources)
     * Technologies utilisées
     * Ressources Humaines allouées
     * Délais et livraison
-* Annexes
+* [Annexes](https://github.com/FlorianLeveil/TP_DEV_MOBIL#annexes)
 
 ----
 ## Mise en situation
