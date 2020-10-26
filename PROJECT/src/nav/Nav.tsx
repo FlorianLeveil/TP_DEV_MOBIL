@@ -9,7 +9,7 @@ import {
     IonTabs
 } from '@ionic/react';
 
-import {personAdd, settings, people} from 'ionicons/icons';
+import {personAdd, settings, people, home} from 'ionicons/icons';
 import Contact from '../pages/Contact';
 import Profile from '../pages/Profile';
 import Group from '../pages/Group_main';
@@ -27,6 +27,10 @@ const Nav: React.FC = () => (
 
         </IonRouterOutlet>
         <IonTabBar slot="top">
+            <IonTabButton tab="Home" href={ROUTE_HOME}>
+                <IonIcon icon={home} />
+                <IonLabel>Messages</IonLabel>
+            </IonTabButton>
             <IonTabButton tab="Contact" href={ROUTE_CONTACT}>
                 <IonIcon icon={personAdd} />
                 <IonLabel>Contact</IonLabel>

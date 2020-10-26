@@ -1,6 +1,7 @@
 import { IonItemSliding,IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonItemOptions, IonItemOption, IonNote, IonList, IonListHeader, IonAvatar } from '@ionic/react';
 import React from 'react';
 import ExploreContainer from '../components/ExploreContainer';
+import { ROUTE_CONVERSATION } from '../nav/Routes';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -12,8 +13,8 @@ const Home: React.FC = () => {
 				Messages non lues
 			</IonListHeader>
 
-			<IonItemSliding>
-				<IonItem>
+			<IonItemSliding >
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -34,7 +35,7 @@ const Home: React.FC = () => {
 
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -56,7 +57,7 @@ const Home: React.FC = () => {
 
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -78,7 +79,7 @@ const Home: React.FC = () => {
 
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -103,7 +104,7 @@ const Home: React.FC = () => {
 			</IonListHeader>
 
 			<IonItemSliding>
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -123,7 +124,7 @@ const Home: React.FC = () => {
 
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -144,7 +145,7 @@ const Home: React.FC = () => {
 
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -165,7 +166,7 @@ const Home: React.FC = () => {
 
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -184,7 +185,7 @@ const Home: React.FC = () => {
 			</IonItemSliding>
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>
@@ -203,7 +204,7 @@ const Home: React.FC = () => {
 			</IonItemSliding>
 			<IonItemSliding>
 
-				<IonItem>
+				<IonItem routerLink={ROUTE_CONVERSATION}>
 					<IonAvatar slot="start">
 					<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 					</IonAvatar>

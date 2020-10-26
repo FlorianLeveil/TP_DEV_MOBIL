@@ -24,7 +24,11 @@ import {
   const Conversation: React.FC = () => {
   
     return (
-        <div>Bonjour</div>
+        <IonPage>
+			<IonContent>
+				<IonTitle>Bonjour</IonTitle>
+			</IonContent>
+        </IonPage>
     );
   };
   

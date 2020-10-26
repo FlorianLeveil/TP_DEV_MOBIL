@@ -23,7 +23,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import {ROUTE_HOME, ROUTE_NAV } from './nav/Routes';
+import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN } from './nav/Routes';
 import Nav from './nav/Nav';
 
 const App: React.FC = () => (
@@ -31,6 +31,8 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route path={ROUTE_HOME} component={Nav} />
+        <Route path={ROUTE_CONTACT} component={Nav} />
+        <Route path={ROUTE_GROUP_MAIN} component={Nav} />
         <Redirect path="/" exact to={ROUTE_HOME} />
       </IonRouterOutlet>
     </IonReactRouter>
