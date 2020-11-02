@@ -1,0 +1,7 @@
+{
+  "name": "TP5_GPSApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
