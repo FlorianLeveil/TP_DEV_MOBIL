@@ -1,0 +1,27 @@
+ion-toolbar {
+    text-align: center;
+    --background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+}
+
+ion-title {
+    font-weight: bolder;
+}
+
+ion-grid {
+    text-align: center;
+}
+
+.alertInput {
+	button.alert-button:nth-child(1) {
+		color: color(orange);
+	}
+	button.alert-button:nth-child(2) {
+		font-weight: bold;
+		color: color(green);
+	}
+	button.alert-button:nth-child(3) {
+		font-weight: bold;
+		color: color(blue);
+	}
+}

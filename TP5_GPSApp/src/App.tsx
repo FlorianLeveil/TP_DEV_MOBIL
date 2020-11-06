@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -21,10 +21,19 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
 import { ROUTE_LIVE, ROUTE_TABS_BASE } from './nav/Routes';
 import Tabs from './nav/Tabs';
+import AppContext from './data/app-context';
 
 const App: React.FC = () => {
+  const appCtx = useContext(AppContext);
+
+  useEffect(() => {
+    appCtx.initContext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <IonApp>
       <IonReactRouter>

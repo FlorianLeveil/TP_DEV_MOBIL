@@ -1,12 +1,21 @@
 import { IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import './custom.css'
+import React, { useContext } from 'react';
+import './custom.scss'
 
 import { save } from 'ionicons/icons';
 
-import LocationComponent from '../components/GeolocationComponent';
+import TestComponent from '../components/testComponent';
+import AppContext from '../data/app-context'
 
 const Live: React.FC = () => {
+  const appCtx = useContext(AppContext)
+
+  const localupdateCoordinates = () => {
+    let updatedCoordonates = { ...appCtx.coordinates }
+    updatedCoordonates.latitude = parseFloat(document.getElementById('longData')?.textContent!)
+    updatedCoordonates.longitude = parseFloat(document.getElementById('latiData')?.textContent!)
+    appCtx.updateCoordinates(updatedCoordonates)
+  }
 
   return (
     <IonPage>
@@ -22,10 +31,10 @@ const Live: React.FC = () => {
               <IonTitle>Your current position is :</IonTitle>
             </IonCol>
           </IonRow>
-          <LocationComponent />
+          <TestComponent />
           <IonRow>
             <IonCol>
-              <IonButton fill='outline'><IonIcon slot="start" icon={save} /> <IonLabel slot='end'>Save!</IonLabel></IonButton>
+              <IonButton fill='outline' onClick={() => localupdateCoordinates()}><IonIcon slot="start" icon={save} /> <IonLabel slot='end'>Save!</IonLabel></IonButton>
             </IonCol>
           </IonRow>
         </IonGrid>
