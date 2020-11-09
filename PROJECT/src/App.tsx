@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -23,20 +23,31 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN } from './nav/Routes';
+import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN, ROUTE_PROFILE } from './nav/Routes';
 import Nav from './nav/Nav';
+import AppContext from './data/app-context';
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+
+  const appCtx = useContext(AppContext);
+
+  useEffect(() => {
+    appCtx.initContext();
+  }, [])
+
+  return (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
         <Route path={ROUTE_HOME} component={Nav} />
         <Route path={ROUTE_CONTACT} component={Nav} />
         <Route path={ROUTE_GROUP_MAIN} component={Nav} />
+        <Route path={ROUTE_PROFILE} component={Nav} />
         <Redirect path="/" exact to={ROUTE_HOME} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
-);
+  )
+};
 
 export default App;
