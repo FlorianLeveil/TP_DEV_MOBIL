@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 
 
-var firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyC0_-vQQeD88Q2xlCt-NKyqU_iqtSnlovE",
     authDomain: "limeproject-e57af.firebaseapp.com",
     databaseURL: "https://limeproject-e57af.firebaseio.com",
@@ -14,3 +14,5 @@ var firebaseConfig = {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
+
+  export default firebase;
