@@ -1,62 +1,92 @@
 import React from 'react';
+import firebase from "../firebase";
 
-export interface Apartment {
-    id: string,
-    address: string,
-    price: number,
-    addDate: string,
-    notes: string | undefined,
-    pictures: string[],
-    surface: number,
-    renovation: number,
-    rent: number,
-    vacancy: number,
+
+export interface ConversationNormal {
+    id: String,
+    convName: String,
+    idUsers: String[],
 }
 
-export interface Profile {
-    id: string,
-    username: string,
-    picture: string | null,
-    loanRate: number,
-    insuranceRate: number,
-    loanPeriod: number,
-    notaryFees: number,
-    contribution: number
+export interface ConversationGroup {
+    id: String,
+    convName: String,
+    idUsers: String[],
+    idAdministrator: String,
+    pictureProfil: String | null
 }
 
-export type FinancialInfoFields = "loanRate" | "insuranceRate" | "loanPeriod" | "notaryFees" | "contribution";
-
-export type ApartmentInputFields = "price" | "surface" | "renovation" | "rent" | "vacancy";
-
-export const defaultProfile: Profile = {
-    id: '0',
-    username: "Unknown",
-    picture: null,
-    loanRate: 2,
-    insuranceRate: 0.35,
-    loanPeriod: 20,
-    notaryFees: 8,
-    contribution: 0
+export interface Message {
+    id: String,
+    idConv: String,
+    idUser: String,
+    date: number,
+    picture: String | null,
+    content: String | null
 }
+export interface Picture {
+    id: String,
+    filename: string,
+    webPath: string,
+    base64: string,
+}
+export interface UserData {
+    id: String,
+    username: String,
+    name: String,
+    lastname: String,
+    email: String,
+    birthdate: String,
+    description: String,
+}
+
+export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
+
+
 
 interface AppContext {
     initContext: () => void,
-    apartments: Apartment[],
-    addApartment: (newApartment: Apartment) => void,
-    deleteApartment: (id: string) => void,
-    updateApartment: (updatedApartment: Apartment) => void,
-    profile: Profile,
-    updateProfile: (updatedProfile: Profile) => void
+
+    userdata: UserData[],
+    addUserData: (newUser: UserData) => void,
+    updateUserData: (updateUser: UserData) => void,
+
+    picture: Picture[]
+    addPicture: (addPicture: Picture) => void,
+    updatePicture: (updatePicture: Picture) => void,
+
+    message: Message[],
+    addMessage: (message: Message) => void,
+
+    conversationNormal: ConversationNormal[],
+    addConversationNormal: (conversationNormal: ConversationNormal) => void,
+
+    conversationGroup: ConversationGroup[],
+    addConversationGroup: (conversationGroup: ConversationGroup) => void,
+    user: firebase.User | null,
+    authenticated: boolean;
+    setUser: any;
+    loadingAuthState: boolean;
 }
 
 const AppContext = React.createContext<AppContext>({
     initContext: () => { },
-    apartments: [],
-    addApartment: () => { },
-    deleteApartment: () => { },
-    updateApartment: () => { },
-    profile: defaultProfile,
-    updateProfile: () => { }
+    userdata: [],
+    addUserData: () => { },
+    updateUserData: () => { },
+    picture: [],
+    addPicture: () => { },
+    updatePicture: () => { },
+    message: [],
+    addMessage: () => { },
+    conversationNormal: [],
+    addConversationNormal: () => {},
+    conversationGroup: [],
+    addConversationGroup: () => {},
+    user: null,
+    authenticated: false,
+    setUser: () => {},
+    loadingAuthState: false,
 });
 
 export default AppContext

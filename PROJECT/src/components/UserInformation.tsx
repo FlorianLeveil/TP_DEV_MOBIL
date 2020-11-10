@@ -1,34 +1,31 @@
 import { IonAlert, IonItem, IonLabel, IonNote } from '@ionic/react';
 import React, { useContext, useState } from 'react';
-import AppContext, { FinancialInfoFields } from '../data/app-context';
+import AppContext, { UserData, UserInformationFields } from '../data/app-context';
+import firebase from "../firebase";
+import "firebase/firestore";
 
 
-const FinancialInfoItem: React.FC<{ field: FinancialInfoFields, friendlyName: string, unit: string }> = (props) => {
+const UserInformationItem: React.FC<{userdata: any, field: UserInformationFields, friendlyName: string, unit: String, type: String }> = (props) => {
     const appCtx = useContext(AppContext)
     const [showAlert, setShowAlert] = useState(false);
 
-    const update = (data: number) => {
-        let updatedProfile = { ...appCtx.profile }
-        updatedProfile[props.field] = data;
-        appCtx.updateProfile(updatedProfile);
-    }
+
     return (
         <IonItem>
             <IonLabel>
                 {props.friendlyName}
             </IonLabel>
-            <IonNote onClick={() => setShowAlert(true)} slot="end">{appCtx.profile[props.field]}{props.unit}</IonNote>
             <IonAlert
                 isOpen={showAlert}
                 onDidDismiss={() => setShowAlert(false)}
                 header={props.friendlyName}
                 inputs={[
                     {
-                        name: props.field,
-                        type: 'number',
-                        id: `profile-${props.field}`,
-                        value: appCtx.profile[props.field],
-                        placeholder: 'Your ' + props.friendlyName
+                        name: props.userdata,
+                        type: 'textarea',
+                        id: `user-${props.field}`,
+                        value: props.userdata,
+                        placeholder: 'Your ' + props.userdata
                     }
                 ]}
                 buttons={[
@@ -41,11 +38,11 @@ const FinancialInfoItem: React.FC<{ field: FinancialInfoFields, friendlyName: st
                     },
                     {
                         text: 'Ok',
-                        handler: (alertData) => update(alertData[props.field])
+                        // handler: (alertData) => update(alertData[props.field])
                     }
                 ]} />
         </IonItem>
     )
 }
 
-export default FinancialInfoItem
+export default UserInformationItem

@@ -4,6 +4,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import AppContextProvider from './data/AppContextProvider';
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
+import firebase from "firebase/app";
+
 
 ReactDOM.render(<AppContextProvider><App /></AppContextProvider>, document.getElementById('root'));
 

@@ -1,8 +1,12 @@
 import { IonItemSliding,IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonItemOptions, IonItemOption, IonNote, IonList, IonListHeader, IonAvatar } from '@ionic/react';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import ExploreContainer from '../components/ExploreContainer';
 import { ROUTE_CONVERSATION } from '../nav/Routes';
 import './Home.css';
+import firebase from "../firebase";
+import "firebase/firestore";
+import AppContext, { UserData } from '../data/app-context';
+
 
 const Home: React.FC = () => {
 	return (

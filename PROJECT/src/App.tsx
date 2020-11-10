@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
+import AuthRoutes from './nav/AuthRoutes';
+import PrivateRoute from './nav/PrivateRoutes';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -23,9 +24,10 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN, ROUTE_PROFILE } from './nav/Routes';
+import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN, ROUTE_PROFILE, ROUTE_CONNEXION } from './nav/Routes';
 import Nav from './nav/Nav';
 import AppContext from './data/app-context';
+import Connexion from './pages/Connexion';
 
 const App: React.FC = () => {
 
@@ -39,11 +41,18 @@ const App: React.FC = () => {
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path={ROUTE_HOME} component={Nav} />
-        <Route path={ROUTE_CONTACT} component={Nav} />
-        <Route path={ROUTE_GROUP_MAIN} component={Nav} />
-        <Route path={ROUTE_PROFILE} component={Nav} />
-        <Redirect path="/" exact to={ROUTE_HOME} />
+        {/* <Route path={ROUTE_HOME} component={Nav} />
+
+        <Redirect path="/" exact to={ROUTE_CONNEXION} /> */}
+          <Switch>
+            <PrivateRoute path={ROUTE_CONTACT} component={Nav} />
+            <PrivateRoute path={ROUTE_GROUP_MAIN} component={Nav} />
+            <PrivateRoute path={ROUTE_CONNEXION} component={Connexion}/>
+            <PrivateRoute exact path={`${ROUTE_PROFILE}:id`} component={Nav} />
+            <PrivateRoute path={ROUTE_HOME} component={Nav} />
+            <Route path="/auth" component={AuthRoutes} />
+            <Redirect path="/" to={ROUTE_HOME} />
+          </Switch>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

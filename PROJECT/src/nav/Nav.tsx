@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Redirect, Route} from 'react-router-dom';
 import {
     IonIcon,
@@ -14,13 +14,45 @@ import Contact from '../pages/Contact';
 import Profile from '../pages/Profile';
 import Group from '../pages/Group_main';
 import Home from '../pages/Home';
-import { ROUTE_CONTACT, ROUTE_PROFILE, ROUTE_GROUP_MAIN, ROUTE_HOME, ROUTE_NAV } from './Routes';
+import { ROUTE_CONTACT, ROUTE_PROFILE, ROUTE_GROUP_MAIN, ROUTE_HOME, ROUTE_NAV, ROUTE_CONNEXION } from './Routes';
+import Connexion from '../pages/Connexion';
+import AppContext, { UserData } from '../data/app-context';
+import firebase from 'firebase';
 
-const Nav: React.FC = () => (
+const Nav: React.FC = () => {
+    const [userdata, setUserData] = useState<UserData>()
+    const appCtx = useContext(AppContext)
+
+	let current_user = firebase.auth().currentUser
+	let id_current_user = current_user?.uid
+	const db = firebase.firestore();
+	let user_props = db.collection('Users').doc(id_current_user)
+
+	user_props.get().then(function(user_props) {
+		if (user_props.exists) {
+			const user_data_from_db = user_props.data()
+			const newUserData: UserData = {
+				id: user_data_from_db?.uid,
+				username: user_data_from_db?.username,
+				name: user_data_from_db?.name,
+				lastname: user_data_from_db?.lastname,
+				email: user_data_from_db?.email,
+				birthdate: user_data_from_db?.birthdate,
+				description: user_data_from_db?.description,
+			}
+			setUserData(newUserData)
+		} else {
+			console.log("No such document!");
+		}
+	}).catch(function(error) {
+		console.log("Error getting document:", error);
+    });
+    return (
     <IonTabs>
         <IonRouterOutlet>
             <Route path={ROUTE_CONTACT} component={Contact} exact />
-            <Route path={ROUTE_PROFILE} component={Profile} exact />
+            <Route path={ROUTE_PROFILE + id_current_user} component={Profile} exact />
+            <Route path={ROUTE_CONNEXION} component={Connexion} exact />
             <Route path={ROUTE_GROUP_MAIN} component={Group} exact />
             <Route path={ROUTE_HOME} component={Home} exact />
             <Redirect path={ROUTE_NAV} exact to={ROUTE_HOME} />
@@ -39,12 +71,13 @@ const Nav: React.FC = () => (
                 <IonIcon icon={people} />
                 <IonLabel>Group</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="Profile" href={ROUTE_PROFILE}>
+            <IonTabButton tab="Profile" href={ROUTE_PROFILE + id_current_user}>
                 <IonIcon icon={settings} />
                 <IonLabel>Profile</IonLabel>
             </IonTabButton>
         </IonTabBar>
     </IonTabs>
-);
+    )
+};
 
 export default Nav;

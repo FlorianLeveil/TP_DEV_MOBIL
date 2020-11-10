@@ -1,6 +1,3 @@
-import firebase from "firebase/app";
-
-
 export const firebaseConfig = {
     apiKey: "AIzaSyC0_-vQQeD88Q2xlCt-NKyqU_iqtSnlovE",
     authDomain: "limeproject-e57af.firebaseapp.com",
@@ -11,8 +8,5 @@ export const firebaseConfig = {
     appId: "1:284623706488:web:be2906a8d25144310a508d",
     measurementId: "G-0CFMVHW6XX"
   };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
 
-  export default firebase;
+export default firebaseConfig;

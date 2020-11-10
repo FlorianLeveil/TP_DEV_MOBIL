@@ -1,5 +1,6 @@
 import {
   IonAlert,
+  IonButton,
   IonCol,
   IonContent,
   IonGrid,
@@ -11,76 +12,43 @@ import {
 } from '@ionic/react';
 import React, { Suspense, useContext, useState } from 'react';
 import './Profile.scss';
-
-import AppContext from '../data/app-context';
-import FinancialInfoItem from '../components/FinancialInfoItem';
+import { useHistory, useParams } from 'react-router-dom';
+import AppContext, { Picture, UserData } from '../data/app-context';
+import UserInformationItem from '../components/UserInformation';
 import ResponsiveContent from '../components/ResponsiveContent';
-
-const ProfilePicture = React.lazy(() => import('../components/ProfilePicture'))
+import firebase from "../firebase";
+import "firebase/firestore";
 
 const Profile: React.FC = () => {
-  const [showAlert, setShowAlert] = useState(false);
+  const id = useParams<{ id: string }>().id;
+  const [picturesBase64, setPicturesBase64] = useState<string[]>();
   const appCtx = useContext(AppContext)
-
-  const updateUsername = (newUsername: string) => {
-    let updatedProfile = { ...appCtx.profile }
-    updatedProfile.username = newUsername;
-    appCtx.updateProfile(updatedProfile);
-  }
-
+  // const userdata = appCtx.userdata.find(userdata => userdata.id === id)
+  console.log(appCtx)
+  const userdata = appCtx.userdata.find(userdata => userdata.id === 'b4Es3U2wWrho6xjOibUGOC96zpg1')
   return (
-    <IonPage id="Profile">
+    <IonPage id="User">
       <IonContent>
         <IonGrid className="ion-no-padding">
           <IonRow id="headerRow" className="ion-justify-content-around ion-align-items-center">
             <Suspense fallback={<IonSpinner />}>
-              <ProfilePicture />
             </Suspense>
-            <IonCol size="12" onClick={() => setShowAlert(true)} className="ion-text-center ion-padding-bottom">{appCtx.profile.username}</IonCol>
           </IonRow>
           <IonRow>
             <ResponsiveContent>
               <IonList className="ion-padding" mode="ios">
                 <IonListHeader className="ion-padding-bottom">
-                  Financial Information
+                  Informations {userdata?.birthdate}
                 </IonListHeader>
-                <FinancialInfoItem field='loanRate' friendlyName='Loan rate' unit="%" />
-                <FinancialInfoItem field='insuranceRate' friendlyName='Insurance loan rate' unit="%" />
-                <FinancialInfoItem field='loanPeriod' friendlyName='Loan period' unit=" years" />
-                <FinancialInfoItem field='notaryFees' friendlyName='Notary fees' unit="%" />
-                <FinancialInfoItem field='contribution' friendlyName='Contribution' unit="€" />
+                <UserInformationItem userdata={'lol'} field='username' friendlyName='Pseudo' unit='' type='textarea' />
+                <UserInformationItem userdata={'lol'} field='name' friendlyName='Name' unit='' type='textarea' />
+                <UserInformationItem userdata={'lol'} field='lastname' friendlyName='Lastname' unit='' type='textarea' />
+                <UserInformationItem userdata={'lol'} field='description' friendlyName='Description' unit='' type='textarea' />
               </IonList>
             </ResponsiveContent>
           </IonRow>
         </IonGrid>
-      </IonContent>
-      <IonAlert
-        isOpen={showAlert}
-        onDidDismiss={() => setShowAlert(false)}
-        header={'Username'}
-        inputs={[
-          {
-            name: 'usernameInput',
-            type: 'text',
-            id: 'profile-username',
-            value: appCtx.profile.username,
-            placeholder: 'Your username'
-          }
-        ]}
-        buttons={[
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-              console.log('Confirm Cancel');
-            }
-          },
-          {
-            text: 'Ok',
-            handler: (alertData) => updateUsername(alertData.usernameInput)
-          }
-        ]}
-      />
+      </IonContent>       
     </IonPage>
   );
 };
