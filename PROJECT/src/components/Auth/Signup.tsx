@@ -1,15 +1,11 @@
 import React, { useState, useContext } from "react";
-import { CameraResultType, CameraSource, FilesystemDirectory, Plugins } from '@capacitor/core';
 import { useHistory } from "react-router-dom";
-import { base64FromPath } from '@ionic/react-hooks/filesystem'
 import firebase from "../../firebase";
 import "firebase/auth";
 import "firebase/firestore";
-import AppContext, {Picture} from "../../data/app-context";
+import AppContext from "../../data/app-context";
 import { ROUTE_HOME, ROUTE_LOGIN } from "../../nav/Routes";
-import { IonAlert, IonButton, IonCol, IonContent, IonGrid, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow } from "@ionic/react";
-import { cameraOutline } from "ionicons/icons";
-const { Camera } = Plugins;
+import { IonAlert, IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
 
 interface FormItems {
   username: string;
@@ -25,8 +21,8 @@ const SignUp = () => {
   const appCtx = useContext(AppContext);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [picture, setPicture] = useState<Picture>();
-  const defaultImg = ''
+  // const [picture, setPicture] = useState<Picture>();
+  // const defaultImg = ''
   const [values, setValues] = useState({
     username: "",
     name: "",
@@ -45,7 +41,6 @@ const SignUp = () => {
 
   const handleSubmit = (event: any) => {
     event?.preventDefault();
-    console.log(values, 'values');
     firebase
       .auth()
       .createUserWithEmailAndPassword(values.email, values.password)

@@ -1,22 +1,26 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import firebase from "../../firebase";
 import "firebase/auth";
 import "firebase/firestore";
-import AppContext from "../../data/app-context";
-import {  ROUTE_LOGIN } from "../../nav/Routes";
+import { ROUTE_LOGIN } from "../../nav/Routes";
 import { IonAlert, IonButton, IonContent, IonPage } from "@ionic/react";
 import Logout from "./Logout";
 
 const MailConfirmation: React.FC = () => {
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
     const history = useHistory();
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>();
 
     useEffect(() => {
         sendVerificationEmail()
+        // eslint-disable-next-line
     }, [])
+
+    const handleClick = () => {
+        sendVerificationEmail()
+    }
 
     const sendVerificationEmail = () => {
         const userCredential = firebase.auth().currentUser;
@@ -28,10 +32,6 @@ const MailConfirmation: React.FC = () => {
             setErrorMessage(error.message)
             setShowAlert(true)
         })
-    }
-
-    const handleClick = () => {
-        sendVerificationEmail()
     }
 
     return (

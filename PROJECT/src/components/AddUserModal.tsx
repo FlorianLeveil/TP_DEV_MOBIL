@@ -1,28 +1,8 @@
 import { FilesystemDirectory, Plugins } from '@capacitor/core';
-import {
-    IonButton,
-    IonCol,
-    IonContent,
-    IonDatetime,
-    IonGrid,
-    IonHeader,
-    IonIcon,
-    IonInput,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonListHeader,
-    IonModal,
-    IonRow,
-    IonTextarea,
-    IonTitle,
-    IonToolbar
-} from '@ionic/react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import AppContext, { Picture } from '../data/app-context';
+import { IonButton, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonModal, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import React, { useRef, useState } from 'react';
+import { Picture } from '../data/app-context';
 import AddPictureNewUser from './AddPictureNewUser';
-import defaultImg from '../assets/default.png'
-
 
 const { Filesystem } = Plugins;
 
@@ -32,7 +12,7 @@ const AddUserModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean
     const usernameRef = useRef<HTMLIonInputElement>(null);
     const nameRef = useRef<HTMLIonInputElement>(null);
     const lastnameRef = useRef<HTMLIonInputElement>(null);
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
     const [picture, setPicture] = useState<Picture>();
     const [selectedDate, setSelectedDate] = useState<string>('2012-12-15T13:47:20.789');
 
@@ -51,12 +31,12 @@ const AddUserModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean
             })
         }
 
-        let defaultPicture: Picture = {
-            id: '',
-            filename: '',
-            webPath: '',
-            base64: ''
-        }
+        // let defaultPicture: Picture = {
+        //     id: '',
+        //     filename: '',
+        //     webPath: '',
+        //     base64: ''
+        // }
         
         // let newUser: User = {
         //     id: new Date().toISOString(),

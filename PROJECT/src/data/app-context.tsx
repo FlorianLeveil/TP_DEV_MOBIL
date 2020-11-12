@@ -24,32 +24,42 @@ export interface Message {
     picture: String | null,
     content: String | null
 }
+
 export interface Picture {
     id: String,
     filename: string,
     webPath: string,
     base64: string,
 }
+
 export interface UserData {
-    id: String,
     username: String,
     name: String,
     lastname: String,
     email: String,
     birthdate: String,
+    phone: String,
     description: String,
+}
+
+export const defaultUserData: UserData = {
+    phone: 'default',
+    username: 'default',
+    name: 'default',
+    lastname: 'default',
+    email: 'default',
+    birthdate: 'default',
+    description: 'default',
 }
 
 export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
 
-
-
 interface AppContext {
     initContext: () => void,
 
-    userdata: UserData[],
-    addUserData: (newUser: UserData) => void,
+    userdata: UserData,
     updateUserData: (updateUser: UserData) => void,
+    updateOneFieldUserData: (updateUser: any, field: string, value: any) => void,
 
     picture: Picture[]
     addPicture: (addPicture: Picture) => void,
@@ -71,9 +81,9 @@ interface AppContext {
 
 const AppContext = React.createContext<AppContext>({
     initContext: () => { },
-    userdata: [],
-    addUserData: () => { },
+    userdata: defaultUserData,
     updateUserData: () => { },
+    updateOneFieldUserData: () => {},
     picture: [],
     addPicture: () => { },
     updatePicture: () => { },

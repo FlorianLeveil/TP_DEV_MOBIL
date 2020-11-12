@@ -26,11 +26,11 @@ const Login: React.FC = () => {
         if (firebase.auth().currentUser) {
             history.push(ROUTE_HOME);
         }
-    }, [appCtx.user])
+    }, [history, appCtx.user]);
 
     const handleClick = () => {
         history.push(ROUTE_SIGN_UP);
-    }
+    };
 
     const handleChange = (event: CustomEvent) => {
         const tar = (event.target as HTMLInputElement)
@@ -38,17 +38,15 @@ const Login: React.FC = () => {
             ...values,
             [tar.name]: tar.value
         }));
-    }
+    };
 
     const handleSubmit = (event: any) => {
-        console.log(values)
         event.preventDefault();
         firebase
             .auth()
             .signInWithEmailAndPassword(values.email, values.password)
-            .then(res => {
+            .then( res => {
                 appCtx.setUser(res);
-                console.log(res, 'res')
                 history.push(ROUTE_HOME);
             })
             .catch(error => {
@@ -57,9 +55,40 @@ const Login: React.FC = () => {
             });
     }
 
-    const handleWithGoogle = () => {
-        var provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithRedirect(provider);
+    const handleWithGoogle = (event: any) => {
+        event.preventDefault();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase
+            .auth()
+            .signInWithPopup(provider)
+            .then((res) => {
+                if ( res.additionalUserInfo?.isNewUser ) {
+                    appCtx.setUser(res);
+                    const db = firebase.firestore();
+                    db.collection("Users")
+                        .doc(res.user!.uid)
+                        .set({
+                            email: res.user?.email,
+                            username: res.user?.displayName,
+                            phone: res.user?.phoneNumber,
+                            name: '',
+                            lastname: '',
+                            description: '',
+                            birthdate: '',
+                        })
+                        .then(() => {
+                            appCtx.setUser(res);
+                            history.push(ROUTE_HOME);
+                        })
+                        .catch(error => {
+                            setErrorMessage(error.message)
+                            setShowAlert(true)
+                        });
+                } else {
+                    appCtx.setUser(res);
+                    history.push(ROUTE_HOME);
+                }
+            });
     }
 
     return (
@@ -89,12 +118,10 @@ const Login: React.FC = () => {
                                     <IonButton expand="full" color="danger" onClick={handleWithGoogle}>
                                         <IonIcon icon={logoGoogle} slot="start" />
                                         Login with Google
-                                        </IonButton>
+                                    </IonButton>
                                 </div>
                                 <div>
-                                    <p style={{ margin: "0", marginTop: "2em" }}>
-                                        Not logged in yet?
-                                    </p>
+                                    <p style={{ margin: "0", marginTop: "2em" }}>Not logged in yet?</p>
                                     <IonButton onClick={handleClick} fill="clear">SignUp</IonButton>
                                 </div>
                             </form>
@@ -110,6 +137,7 @@ const Login: React.FC = () => {
                 onDidDismiss={() => { setErrorMessage(""); setShowAlert(false) }}
                 buttons={[
                     {
+                        cssClass: 'primary',
                         text: 'Ok'
                     }
                 ]}

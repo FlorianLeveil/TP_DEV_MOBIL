@@ -13,7 +13,7 @@ export interface RouteAndRedirectProps {
 }
 
 const PrivateRoute: React.FC<RouteAndRedirectProps> = (props) => {
-    const { authenticated, loadingAuthState, user } = useContext(AppContext);
+    const { authenticated, loadingAuthState } = useContext(AppContext);
     const userCredential = firebase.auth().currentUser;
 
     if (loadingAuthState) {

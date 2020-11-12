@@ -1,31 +1,18 @@
-import {
-  IonAlert,
-  IonButton,
-  IonCol,
-  IonContent,
-  IonGrid,
-  IonList,
-  IonListHeader,
-  IonPage,
-  IonRow,
-  IonSpinner,
-} from '@ionic/react';
-import React, { Suspense, useContext, useState } from 'react';
+import React, { Suspense, useContext } from 'react';
+import { IonButton, IonContent, IonGrid, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonSpinner } from '@ionic/react';
+import { exitOutline } from 'ionicons/icons';
+
 import './Profile.scss';
-import { useHistory, useParams } from 'react-router-dom';
-import AppContext, { Picture, UserData } from '../data/app-context';
+import AppContext from '../data/app-context';
 import UserInformationItem from '../components/UserInformation';
 import ResponsiveContent from '../components/ResponsiveContent';
-import firebase from "../firebase";
-import "firebase/firestore";
+
+import Logout from '../components/Auth/Logout';
 
 const Profile: React.FC = () => {
-  const id = useParams<{ id: string }>().id;
-  const [picturesBase64, setPicturesBase64] = useState<string[]>();
-  const appCtx = useContext(AppContext)
-  // const userdata = appCtx.userdata.find(userdata => userdata.id === id)
-  console.log(appCtx)
-  const userdata = appCtx.userdata.find(userdata => userdata.id === 'b4Es3U2wWrho6xjOibUGOC96zpg1')
+  const appCtx = useContext(AppContext);
+  const userdata = appCtx.userdata;
+
   return (
     <IonPage id="User">
       <IonContent>
@@ -36,14 +23,24 @@ const Profile: React.FC = () => {
           </IonRow>
           <IonRow>
             <ResponsiveContent>
-              <IonList className="ion-padding" mode="ios">
+              <IonList className="ion-margin ion-padding" mode="ios">
                 <IonListHeader className="ion-padding-bottom">
-                  Informations {userdata?.birthdate}
+                  Informations
                 </IonListHeader>
-                <UserInformationItem userdata={'lol'} field='username' friendlyName='Pseudo' unit='' type='textarea' />
-                <UserInformationItem userdata={'lol'} field='name' friendlyName='Name' unit='' type='textarea' />
-                <UserInformationItem userdata={'lol'} field='lastname' friendlyName='Lastname' unit='' type='textarea' />
-                <UserInformationItem userdata={'lol'} field='description' friendlyName='Description' unit='' type='textarea' />
+                <UserInformationItem userdata={userdata.username} field='username' friendlyName='Pseudo' unit='' type='text' />
+                <UserInformationItem userdata={userdata.name} field='name' friendlyName='Name' unit='' type='text' />
+                <UserInformationItem userdata={userdata.lastname} field='lastname' friendlyName='Lastname' unit='' type='text' />
+                <UserInformationItem userdata={userdata.description} field='description' friendlyName='Description' unit='' type='textarea' />
+                <IonItem>
+                  <IonLabel></IonLabel>
+                  <Logout>
+                    <IonButton>
+                      <IonLabel>Disconnect</IonLabel>
+                      <IonIcon slot='end' icon={ exitOutline }/>
+                    </IonButton>
+                  </Logout>
+                </IonItem>
+                
               </IonList>
             </ResponsiveContent>
           </IonRow>

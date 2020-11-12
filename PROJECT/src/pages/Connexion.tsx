@@ -1,16 +1,12 @@
-import { IonItemSliding,IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonItemOptions, IonItemOption, IonNote, IonList, IonListHeader, IonAvatar, IonFabButton, IonIcon, IonGrid, IonRow, IonFab, IonCol, IonInput, IonButton } from '@ionic/react';
-import React, { useContext, useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonFabButton, IonIcon, IonGrid, IonRow, IonFab, IonCol, IonInput, IonButton } from '@ionic/react';
+import React, { useState } from 'react';
 import { add, personCircle } from 'ionicons/icons';
 import './Home.css';
 import AddUserModal from '../components/AddUserModal';
-import AppContext from '../data/app-context';
 import ResponsiveContent from '../components/ResponsiveContent';
 
-
-
 const Connexion: React.FC = () => {
-    const [showModal, setShowModal] = useState(false);
-    const appCtx = useContext(AppContext);
+  const [showModal, setShowModal] = useState(false);
 	return (
 	<IonPage>
         <IonHeader>
@@ -40,12 +36,12 @@ const Connexion: React.FC = () => {
         <IonRow>
             <IonCol>
                 <p style={{ fontSize: "small" }}>
-                By clicking LOGIN you agree to our <a href="#">Policy</a>
+                By clicking LOGIN you agree to our <a href="https://www.google.com">Policy</a>
                 </p>    
                 <IonButton expand="block">
                 Login
                 </IonButton>    <p style={{ fontSize: "medium" }}>
-                Don't have an account? <a href="#">Sign up!</a>
+                Don't have an account? <a href="https://www.google.com">Sign up!</a>
                 </p>
             </IonCol>
         </IonRow>

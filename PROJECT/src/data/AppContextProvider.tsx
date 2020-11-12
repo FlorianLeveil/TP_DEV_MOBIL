@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AppContext, {Message, ConversationGroup, ConversationNormal, Picture, UserData } from './app-context';
+import AppContext, { Message, ConversationGroup, ConversationNormal, Picture, defaultUserData, UserData } from './app-context';
 import { Plugins } from '@capacitor/core'
 import firebase from "../firebase";
 
-const { Storage, Filesystem } = Plugins;
+const { Storage } = Plugins;
 
 const AppContextProvider: React.FC = (props) => {
-    const [userdata, setUserData] = useState<UserData[]>([])
+    const [userdata, setUserData] = useState<UserData>(defaultUserData)
     const [picture, setPicture] = useState<Picture[]>([])
     const [message, setMessage] = useState<Message[]>([])
     const [conversationGroup, setConversationGroup] = useState<ConversationGroup[]>([])
@@ -14,7 +14,6 @@ const AppContextProvider: React.FC = (props) => {
 
     const [user, setUser] = useState(null as firebase.User | null);
     const [loadingAuthState, setLoadingAuthState] = useState(true);
-
 
     const didMountRef = useRef(false);
     useEffect(() => {
@@ -27,30 +26,50 @@ const AppContextProvider: React.FC = (props) => {
         } else {
             didMountRef.current = true;
         }
-    }, [user, message, conversationGroup, conversationNormal])
+    }, [userdata, picture, message, conversationGroup, conversationNormal])
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user: any) => {
-          setUser(user);
-          setLoadingAuthState(false);
-       });
+            setUser(user);
+            setLoadingAuthState(false);
+        });
     }, []);
 
-    const addUserData = (newUser: UserData) => {
-        setUserData((prevState) => {
-        let newList = [...prevState];
-        newList.unshift(newUser);
-        return newList
-        })
+    // const addUserData = (newUser: UserData) => {
+    //     setUserData((prevState) => {
+    //     let newList = [...prevState];
+    //     newList.unshift(newUser);
+    //     return newList
+    //     })
+    // }
+
+    const updateUserData = (user: any) => {
+        firebase.firestore().collection('Users').doc(user!.uid).get()
+            .then(doc => {
+                const data = doc.data();
+                const aled: UserData = {
+                    phone: data?.phone,
+                    username: data?.username,
+                    name: data?.name,
+                    lastname: data?.lastname,
+                    email: data?.email,
+                    birthdate: data?.birthdate,
+                    description: data?.description,
+                }
+                setUserData(aled);
+            }).catch((err) => {
+                console.log("An error occured : ", err)
+            })
     }
 
-    const updateUserData = (updateUser: UserData) => {
-        const index = userdata.map(el => el.id).indexOf(updateUser.id)
-        setUserData((prevState) => {
-            let newList = [...prevState];
-            newList.splice(index, 1, updateUser)
-            return newList
-        })
+    const updateOneFieldUserData = (user: any, fieldName: string, value: any) => {
+        firebase.firestore().collection('Users').doc(user!.uid).update({
+            [fieldName]: value
+        }).then((res) => {
+            updateUserData(user);
+        }).catch((err) => {
+            console.error("Got errored with : ", err);
+        });
     }
 
     const addPicture = (newPicture: Picture) => {
@@ -114,25 +133,28 @@ const AppContextProvider: React.FC = (props) => {
         setConversationGroup(storedConversationGroup)
     }
 
-    return <AppContext.Provider value={{ initContext, 
-        message, 
-        conversationGroup, 
-        conversationNormal, 
-        picture,
-        userdata,
-        addUserData,
-        updateUserData,
-        addPicture, 
-        updatePicture, 
-        addMessage, 
-        addConversationGroup, 
-        addConversationNormal,  
-        user,
-        authenticated: user !== null,
-        setUser,
-        loadingAuthState}}>
-        {props.children}
-    </AppContext.Provider>
+    return (
+        <AppContext.Provider value={{
+            initContext,
+            userdata,
+            updateUserData,
+            updateOneFieldUserData,
+            message, 
+            conversationGroup, 
+            conversationNormal, 
+            picture,
+            addPicture, 
+            updatePicture, 
+            addMessage, 
+            addConversationGroup, 
+            addConversationNormal,  
+            user,
+            authenticated: user !== null,
+            setUser,
+            loadingAuthState}}>
+            {props.children}
+        </AppContext.Provider>
+    )
 }
 
 export default AppContextProvider

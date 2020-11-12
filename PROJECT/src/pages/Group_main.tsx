@@ -2,19 +2,10 @@ import {
 	IonAvatar,
 	IonButton,
 	IonButtons,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
     IonCol,
     IonContent,
-    IonFab,
-    IonFabButton,
     IonGrid,
     IonHeader,
-    IonIcon,
-    IonImg,
 	IonInput,
 	IonItem,
 	IonLabel,
@@ -49,7 +40,7 @@ import {
 								<IonRow>
 									<IonCol>
 										<IonAvatar>
-											<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+											<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 										</IonAvatar>
 										<IonList>
 											<IonListHeader>
@@ -79,7 +70,7 @@ import {
 								</IonListHeader>
 								<IonItem>
 									<IonAvatar slot="start">
-									<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 									</IonAvatar>
 									<IonLabel>
 										<h2>Florian</h2>
@@ -91,7 +82,7 @@ import {
 
 								<IonItem>
 									<IonAvatar slot="start">
-									<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 									</IonAvatar>
 									<IonLabel>
 										<h2>Florian</h2>
@@ -103,7 +94,7 @@ import {
 
 								<IonItem>
 									<IonAvatar slot="start">
-									<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 									</IonAvatar>
 									<IonLabel>
 										<h2>Florian</h2>
@@ -123,7 +114,7 @@ import {
 								</IonListHeader>
 								<IonItem>
 									<IonAvatar slot="start">
-									<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 									</IonAvatar>
 									<IonLabel>
 										<h2>Groupe1</h2>
@@ -134,7 +125,7 @@ import {
 								</IonItem>
 								<IonItem>
 									<IonAvatar slot="start">
-									<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 									</IonAvatar>
 									<IonLabel>
 										<h2>Groupe2</h2>
@@ -145,7 +136,7 @@ import {
 								</IonItem>
 								<IonItem>
 									<IonAvatar slot="start">
-									<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
 									</IonAvatar>
 									<IonLabel>
 										<h2>Groupe3</h2>

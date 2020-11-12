@@ -35,27 +35,29 @@ const App: React.FC = () => {
 
   useEffect(() => {
     appCtx.initContext();
+  // eslint-disable-next-line
   }, [])
 
   return (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        {/* <Route path={ROUTE_HOME} component={Nav} />
-
-        <Redirect path="/" exact to={ROUTE_CONNEXION} /> */}
-          <Switch>
-            <PrivateRoute path={ROUTE_CONTACT} component={Nav} />
-            <PrivateRoute path={ROUTE_GROUP_MAIN} component={Nav} />
-            <PrivateRoute path={ROUTE_CONNEXION} component={Connexion}/>
-            <PrivateRoute exact path={`${ROUTE_PROFILE}:id`} component={Nav} />
-            <PrivateRoute path={ROUTE_HOME} component={Nav} />
-            <Route path="/auth" component={AuthRoutes} />
-            <Redirect path="/" to={ROUTE_HOME} />
-          </Switch>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          {/*
+          <Route path={ROUTE_HOME} component={Nav} />
+          <Redirect path="/" exact to={ROUTE_CONNEXION} />
+          */}
+            <Switch>
+              <PrivateRoute path={ROUTE_CONTACT} component={Nav} />
+              <PrivateRoute path={ROUTE_GROUP_MAIN} component={Nav} />
+              <PrivateRoute path={ROUTE_CONNEXION} component={Connexion}/>
+              <PrivateRoute exact path={`${ROUTE_PROFILE}:id`} component={Nav} />
+              <PrivateRoute path={ROUTE_HOME} component={Nav} />
+              <Route path="/auth" component={AuthRoutes} />
+              <Redirect path="/" to={ROUTE_HOME} />
+            </Switch>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
   )
 };
 

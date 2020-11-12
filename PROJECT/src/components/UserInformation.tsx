@@ -1,46 +1,59 @@
-import { IonAlert, IonItem, IonLabel, IonNote } from '@ionic/react';
+import { IonAlert, IonItem, IonLabel } from '@ionic/react';
 import React, { useContext, useState } from 'react';
-import AppContext, { UserData, UserInformationFields } from '../data/app-context';
-import firebase from "../firebase";
+import AppContext, { UserInformationFields } from '../data/app-context';
 import "firebase/firestore";
 
-
-const UserInformationItem: React.FC<{userdata: any, field: UserInformationFields, friendlyName: string, unit: String, type: String }> = (props) => {
-    const appCtx = useContext(AppContext)
+const UserInformationItem: React.FC<{userdata: any, field: UserInformationFields, friendlyName: string, unit: String, type: string }> = (props) => {
     const [showAlert, setShowAlert] = useState(false);
+    const appCtx = useContext(AppContext);
 
+    const whatToDisplay = (userdata: String) => {
+        if ( userdata === '' ) {
+            return <i>Empty</i>;
+        } else {
+            return userdata;
+        }
+    }
 
     return (
-        <IonItem>
+        <IonItem onClick={() => {setShowAlert(true)}}>
             <IonLabel>
-                {props.friendlyName}
+                {props.friendlyName.toUpperCase()}
+            </IonLabel>
+            <IonLabel>
+                {whatToDisplay(props.userdata)}
             </IonLabel>
             <IonAlert
                 isOpen={showAlert}
                 onDidDismiss={() => setShowAlert(false)}
                 header={props.friendlyName}
+                message={`change your data ${props.friendlyName}`}
                 inputs={[
                     {
-                        name: props.userdata,
-                        type: 'textarea',
-                        id: `user-${props.field}`,
-                        value: props.userdata,
-                        placeholder: 'Your ' + props.userdata
+                        name: 'dataInput',
+                        type: props.type === 'text' ? 'text' : 'textarea',
+                        placeholder: props.friendlyName,
+                        value: props.userdata
                     }
                 ]}
                 buttons={[
                     {
                         text: 'Cancel',
                         role: 'cancel',
+                        cssClass: 'secondary',
                         handler: () => {
                             console.log('Confirm Cancel');
                         }
                     },
                     {
                         text: 'Ok',
-                        // handler: (alertData) => update(alertData[props.field])
+                        cssClass: 'primary',
+                        handler: (data: any) => {
+                            appCtx.updateOneFieldUserData(appCtx.user, props.field, data['dataInput'])
+                        }
                     }
-                ]} />
+                ]}
+            />
         </IonItem>
     )
 }
