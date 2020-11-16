@@ -1,13 +1,10 @@
-import { IonAvatar, IonButton, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonNote, IonTitle } from '@ionic/react'
-import React, { useContext } from 'react';
-import firebase from '../firebase';
+import { IonAvatar, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonNote } from '@ionic/react'
+import React from 'react';
 
-import AppContext from '../data/app-context';
 import { ROUTE_CONVERSATION } from '../nav/Routes';
 
 
 const HomeConversation: React.FC = () => {
-    const appCtx = useContext(AppContext);
     let contacts = [{user: 'user1', last_message: 'Toto1',date_last_message:'10/09/2020', new_message: 0},
                     {user: 'user2', last_message: 'Toto2',date_last_message:'10/09/2020', new_message: 5},
                     {user: 'user3', last_message: 'Toto3',date_last_message:'10/09/2020', new_message: 0},

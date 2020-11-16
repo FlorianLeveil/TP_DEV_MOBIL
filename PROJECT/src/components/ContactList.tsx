@@ -1,14 +1,8 @@
 import { IonAvatar, IonButton, IonItem, IonLabel, IonList, IonListHeader, IonTitle } from '@ionic/react'
-import React, { useContext } from 'react';
-import firebase from '../firebase';
-
-import AppContext from '../data/app-context';
+import React from 'react';
 
 const ContactList: React.FC = () => {
-    const appCtx = useContext(AppContext);
     const contacts = ['user1', 'user2', 'user3', 'user4', 'user5'];
-
-    
 
     return (
         <IonList>

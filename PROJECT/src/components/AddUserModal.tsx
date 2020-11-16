@@ -30,28 +30,7 @@ const AddUserModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean
                 directory: FilesystemDirectory.Data
             })
         }
-
-        // let defaultPicture: Picture = {
-        //     id: '',
-        //     filename: '',
-        //     webPath: '',
-        //     base64: ''
-        // }
         
-        // let newUser: User = {
-        //     id: new Date().toISOString(),
-        //     email: emailRef.current?.value ? emailRef.current?.value?.toString() : "Unknown email",
-        //     password: passwordRef.current?.value ? passwordRef.current?.value?.toString() : "Unknown password",
-        //     username: usernameRef.current?.value ? usernameRef.current?.value?.toString() : "Unknown username",
-        //     name: nameRef.current?.value ? nameRef.current?.value?.toString() : "Unknown name",
-        //     lastname: lastnameRef.current?.value ? lastnameRef.current?.value?.toString() : "Unknown lastname",
-        //     birthdate: selectedDate,
-        //     description: '',
-        //     picture: defaultPicture,
-        //     friends: [],
-        //     conversations: [],
-        // }
-        // appCtx.addUser(newUser)
         props.setShowModal(false)
     }
 

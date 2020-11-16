@@ -35,7 +35,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     appCtx.initContext();
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [])
 
   return (

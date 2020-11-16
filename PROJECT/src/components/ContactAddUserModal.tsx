@@ -1,12 +1,9 @@
-import { IonAvatar, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonModal, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useContext, useEffect, useState } from 'react';
+import { IonAvatar, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonModal, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
 import firebase from '../firebase';
-import AppContext, { UserData } from '../data/app-context';
-import { text } from 'ionicons/icons';
 
 const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: boolean) => void }> = (props) => {
     const [searchData, setSearchData] = useState<firebase.firestore.DocumentData[]>([])
-    const appCtx = useContext(AppContext);
     const [searchText, setSearchText] = useState('');
 
     useEffect(() => {

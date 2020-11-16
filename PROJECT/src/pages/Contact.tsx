@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonCol, IonContent, IonModal, IonGrid, IonHeader, IonItem, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, IonButtons, IonList, IonSearchbar } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonGrid, IonPage, IonRow } from '@ionic/react';
 import React, { useState } from 'react';
 import ContactAddUserModal from '../components/ContactAddUserModal';
 import ContactList from '../components/ContactList';

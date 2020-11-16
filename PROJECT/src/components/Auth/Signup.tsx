@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import firebase from "../../firebase";
-import "firebase/auth";
 import "firebase/firestore";
 import AppContext from "../../data/app-context";
 import { ROUTE_HOME, ROUTE_LOGIN } from "../../nav/Routes";
@@ -47,9 +46,8 @@ const SignUp = () => {
       .then((userCredential: firebase.auth.UserCredential) => {
         appCtx.setUser(userCredential);
         const db = firebase.firestore();
-        db.collection("Users")
-          .doc(userCredential.user!.uid)
-          .set({
+        console.log(userCredential);
+        db.collection("Users").doc(userCredential.user!.uid).set({
             email: values.email,
             username: values.username,
             phone: values.phone,
@@ -58,26 +56,24 @@ const SignUp = () => {
             lastname: values.lastname,
             description: '',
             birthdate: values.birthdate,
-            uid: appCtx.user?.uid
-          })
-          .then((res) => {
+            uid: userCredential.user!.uid
+          }).then((res) => {
+            appCtx.setupUserData(res);
             db.collection("Contacts")
               .add({
                   uidUser: userCredential.user!.uid,
-                  contactList: [],
+                  contactList: []
               }).then((res1) => {
                   var infos = res1.path.split("/");
                   db.collection("Users").doc(userCredential.user!.uid).update({
                       contact: infos[1]
                   });
               });
-            console.log("handleSUmit say hello!:", res)
-            appCtx.setupUserData(res);
             appCtx.setupContactList(res);
             history.push(ROUTE_HOME);
-          })
-          .catch(error => {
+          }).catch(error => {
             console.error("FOUCK my contact is fucked")
+            console.warn(error)
             setErrorMessage(error.message)
             setShowAlert(true)
           });

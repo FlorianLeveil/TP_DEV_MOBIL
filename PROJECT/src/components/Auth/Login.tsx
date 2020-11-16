@@ -5,8 +5,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import AppContext from "../../data/app-context";
 import { ROUTE_HOME, ROUTE_SIGN_UP } from "../../nav/Routes";
-import { IonAlert, IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
-import { logoGoogle } from "ionicons/icons";
+import { IonAlert, IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
 
 interface UserData {
     email: string;
