@@ -1,5 +1,5 @@
 import { IonAvatar, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonModal, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import firebase from '../firebase';
 
 import AppContext from '../data/app-context';
@@ -10,6 +10,17 @@ const ContactAddUserModal: React.FC<{ showModal: boolean, setShowModal: (value: 
     const [searchText, setSearchText] = useState('');
     const contacts = ['user1', 'user2', 'user3', 'user4', 'user5'];
 
+    useEffect(() => {
+        if (searchText.length >= 3) {
+            firebase.firestore().collection('Users').where('email', '>', searchText).get()
+                .then((res) => {
+                    res.docs.forEach((res2) => {
+                        console.log(res2.data().email);
+                    });
+                })
+        }
+        console.log('-----------')
+    })
 
     return (
         <IonModal isOpen={props.showModal}>
