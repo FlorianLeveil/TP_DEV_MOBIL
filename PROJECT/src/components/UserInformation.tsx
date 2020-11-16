@@ -20,7 +20,7 @@ const UserInformationItem: React.FC<{userdata: any, field: UserInformationFields
             <IonLabel>
                 {props.friendlyName.toUpperCase()}
             </IonLabel>
-            <IonLabel>
+            <IonLabel className="ion-text-right">
                 {whatToDisplay(props.userdata)}
             </IonLabel>
             <IonAlert

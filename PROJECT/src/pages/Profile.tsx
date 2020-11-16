@@ -1,5 +1,5 @@
 import React, { Suspense, useContext } from 'react';
-import { IonButton, IonContent, IonGrid, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonSpinner } from '@ionic/react';
+import { IonButton, IonContent, IonGrid, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonSpinner, IonTitle } from '@ionic/react';
 import { exitOutline } from 'ionicons/icons';
 
 import './Profile.scss';
@@ -25,7 +25,7 @@ const Profile: React.FC = () => {
             <ResponsiveContent>
               <IonList className="ion-margin ion-padding" mode="ios">
                 <IonListHeader className="ion-padding-bottom">
-                  Informations
+                  <IonTitle>Informations</IonTitle>
                 </IonListHeader>
                 <UserInformationItem userdata={userdata.username} field='username' friendlyName='Pseudo' unit='' type='text' />
                 <UserInformationItem userdata={userdata.name} field='name' friendlyName='Name' unit='' type='text' />

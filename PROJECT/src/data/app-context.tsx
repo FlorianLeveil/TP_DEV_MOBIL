@@ -58,8 +58,14 @@ interface AppContext {
     initContext: () => void,
 
     userdata: UserData,
+    setupUserData: (userProps: any) => void,
     updateUserData: (updateUser: UserData) => void,
     updateOneFieldUserData: (updateUser: any, field: string, value: any) => void,
+
+    contacts: firebase.firestore.DocumentData[],
+    setupContactList: (user: any) => void,
+    addContact: (newContact: firebase.firestore.DocumentData) => void,
+    removeContact: (removeContact: firebase.firestore.DocumentData) => void,
 
     picture: Picture[]
     addPicture: (addPicture: Picture) => void,
@@ -82,8 +88,13 @@ interface AppContext {
 const AppContext = React.createContext<AppContext>({
     initContext: () => { },
     userdata: defaultUserData,
+    setupUserData: () => { },
     updateUserData: () => { },
     updateOneFieldUserData: () => {},
+    contacts: [],
+    setupContactList: () => { },
+    addContact: () => { },
+    removeContact: () => { },
     picture: [],
     addPicture: () => { },
     updatePicture: () => { },

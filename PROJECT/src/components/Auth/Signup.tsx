@@ -53,12 +53,24 @@ const SignUp = () => {
             email: values.email,
             username: values.username,
             phone: values.phone,
+            contact: "",
             name: values.name,
             lastname: values.lastname,
             description: '',
             birthdate: values.birthdate
           })
-          .then(() => {
+          .then((res) => {
+            db.collection("Contacts")
+              .add({
+                  user1: db.collection('Users').doc(userCredential.user!.uid),
+              }).then((res1) => {
+                  var infos = res1.path.split("/");
+                  db.collection("Users").doc(userCredential.user!.uid).update({
+                      contact: db.collection(infos[0]).doc(infos[1])
+                  });
+              });
+            appCtx.setupUserData(res);
+            appCtx.setupContactList(res);
             history.push(ROUTE_HOME);
           })
           .catch(error => {

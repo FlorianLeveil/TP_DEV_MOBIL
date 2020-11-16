@@ -1,4 +1,4 @@
-import { IonItemSliding,IonContent, IonPage, IonItem, IonLabel, IonItemOptions, IonItemOption, IonNote, IonList, IonListHeader, IonAvatar, IonModal, IonTitle } from '@ionic/react';
+import { IonItemSliding,IonContent, IonPage, IonItem, IonLabel, IonItemOptions, IonItemOption, IonNote, IonList, IonListHeader, IonAvatar, IonModal, IonTitle, IonButton } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { ROUTE_CONVERSATION } from '../nav/Routes';
 import './Home.css';
@@ -240,6 +240,9 @@ const Home: React.FC = () => {
 							<IonTitle>
 								Sont-ce bien vos informations ?
 							</IonTitle>
+							<IonButton onClick={() => setShowModal(false)}>
+								X
+							</IonButton>
 						</IonListHeader>
 						<IonItem>
 							<IonLabel>Birthdate</IonLabel>

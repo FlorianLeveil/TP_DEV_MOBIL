@@ -12,6 +12,7 @@ interface UserData {
     email: string;
     password: string;
 }
+
 const Login: React.FC = () => {
     const appCtx = useContext(AppContext);
     const history = useHistory();
@@ -47,6 +48,8 @@ const Login: React.FC = () => {
             .signInWithEmailAndPassword(values.email, values.password)
             .then( res => {
                 appCtx.setUser(res);
+                appCtx.setupUserData(res);
+                appCtx.setupContactList(res);
                 history.push(ROUTE_HOME);
             })
             .catch(error => {
@@ -71,21 +74,36 @@ const Login: React.FC = () => {
                             email: res.user?.email,
                             username: res.user?.displayName,
                             phone: res.user?.phoneNumber,
+                            contact: "",
                             name: '',
                             lastname: '',
                             description: '',
                             birthdate: '',
                         })
                         .then(() => {
-                            appCtx.setUser(res);
-                            history.push(ROUTE_HOME);
+                            db.collection("Contacts")
+                                .add({
+                                    user1: db.collection('Users').doc(res.user!.uid),
+                                }).then((res1) => {
+                                    var infos = res1.path.split("/");
+                                    db.collection("Users").doc(res.user!.uid).update({
+                                        contact: db.collection(infos[0]).doc(infos[1])
+                                    });
+                                });
                         })
                         .catch(error => {
                             setErrorMessage(error.message)
                             setShowAlert(true)
                         });
+
+                    appCtx.setUser(res);
+                    appCtx.setupUserData(res);
+                    appCtx.setupContactList(res);
+                    history.push(ROUTE_HOME);
                 } else {
                     appCtx.setUser(res);
+                    appCtx.setupUserData(res);
+                    appCtx.setupContactList(res);
                     history.push(ROUTE_HOME);
                 }
             });
