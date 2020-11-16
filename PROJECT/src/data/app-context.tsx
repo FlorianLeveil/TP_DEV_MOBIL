@@ -40,6 +40,7 @@ export interface UserData {
     birthdate: String,
     phone: String,
     description: String,
+    uid: String,
 }
 
 export const defaultUserData: UserData = {
@@ -50,7 +51,14 @@ export const defaultUserData: UserData = {
     email: 'default',
     birthdate: 'default',
     description: 'default',
+    uid: 'default',
 }
+
+export const defaultContact: firebase.firestore.DocumentData = {
+    uid: 'default',
+    contactList: [],
+}
+    
 
 export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
 
@@ -62,23 +70,23 @@ interface AppContext {
     updateUserData: (updateUser: UserData) => void,
     updateOneFieldUserData: (updateUser: any, field: string, value: any) => void,
 
-    contacts: firebase.firestore.DocumentData[],
+    contacts: firebase.firestore.DocumentData,
     setupContactList: (user: any) => void,
-    addContact: (newContact: firebase.firestore.DocumentData) => void,
-    removeContact: (removeContact: firebase.firestore.DocumentData) => void,
+    addContact: (newContact: String) => void,
+    removeContact: (contact: String) => void,
 
-    picture: Picture[]
-    addPicture: (addPicture: Picture) => void,
-    updatePicture: (updatePicture: Picture) => void,
+    // picture: Picture[]
+    // addPicture: (addPicture: Picture) => void,
+    // updatePicture: (updatePicture: Picture) => void,
 
-    message: Message[],
-    addMessage: (message: Message) => void,
+    // message: Message[],
+    // addMessage: (message: Message) => void,
 
-    conversationNormal: ConversationNormal[],
-    addConversationNormal: (conversationNormal: ConversationNormal) => void,
+    // conversationNormal: ConversationNormal[],
+    // addConversationNormal: (conversationNormal: ConversationNormal) => void,
 
-    conversationGroup: ConversationGroup[],
-    addConversationGroup: (conversationGroup: ConversationGroup) => void,
+    // conversationGroup: ConversationGroup[],
+    // addConversationGroup: (conversationGroup: ConversationGroup) => void,
     user: firebase.User | null,
     authenticated: boolean;
     setUser: any;
@@ -91,19 +99,19 @@ const AppContext = React.createContext<AppContext>({
     setupUserData: () => { },
     updateUserData: () => { },
     updateOneFieldUserData: () => {},
-    contacts: [],
+    contacts: defaultContact,
     setupContactList: () => { },
     addContact: () => { },
     removeContact: () => { },
-    picture: [],
-    addPicture: () => { },
-    updatePicture: () => { },
-    message: [],
-    addMessage: () => { },
-    conversationNormal: [],
-    addConversationNormal: () => {},
-    conversationGroup: [],
-    addConversationGroup: () => {},
+    // picture: [],
+    // addPicture: () => { },
+    // updatePicture: () => { },
+    // message: [],
+    // addMessage: () => { },
+    // conversationNormal: [],
+    // addConversationNormal: () => {},
+    // conversationGroup: [],
+    // addConversationGroup: () => {},
     user: null,
     authenticated: false,
     setUser: () => {},

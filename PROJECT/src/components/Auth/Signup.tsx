@@ -57,23 +57,27 @@ const SignUp = () => {
             name: values.name,
             lastname: values.lastname,
             description: '',
-            birthdate: values.birthdate
+            birthdate: values.birthdate,
+            uid: appCtx.user?.uid
           })
           .then((res) => {
             db.collection("Contacts")
               .add({
-                  user1: db.collection('Users').doc(userCredential.user!.uid),
+                  uidUser: userCredential.user!.uid,
+                  contactList: [],
               }).then((res1) => {
                   var infos = res1.path.split("/");
                   db.collection("Users").doc(userCredential.user!.uid).update({
-                      contact: db.collection(infos[0]).doc(infos[1])
+                      contact: infos[1]
                   });
               });
+            console.log("handleSUmit say hello!:", res)
             appCtx.setupUserData(res);
             appCtx.setupContactList(res);
             history.push(ROUTE_HOME);
           })
           .catch(error => {
+            console.error("FOUCK my contact is fucked")
             setErrorMessage(error.message)
             setShowAlert(true)
           });

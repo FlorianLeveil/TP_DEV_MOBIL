@@ -49,7 +49,7 @@ const Login: React.FC = () => {
             .then( res => {
                 appCtx.setUser(res);
                 appCtx.setupUserData(res);
-                appCtx.setupContactList(res);
+                appCtx.setupContactList(res.user!.uid);
                 history.push(ROUTE_HOME);
             })
             .catch(error => {
@@ -57,57 +57,7 @@ const Login: React.FC = () => {
                 setShowAlert(true)
             });
     }
-
-    const handleWithGoogle = (event: any) => {
-        event.preventDefault();
-        const provider = new firebase.auth.GoogleAuthProvider();
-        firebase
-            .auth()
-            .signInWithPopup(provider)
-            .then((res) => {
-                if ( res.additionalUserInfo?.isNewUser ) {
-                    appCtx.setUser(res);
-                    const db = firebase.firestore();
-                    db.collection("Users")
-                        .doc(res.user!.uid)
-                        .set({
-                            email: res.user?.email,
-                            username: res.user?.displayName,
-                            phone: res.user?.phoneNumber,
-                            contact: "",
-                            name: '',
-                            lastname: '',
-                            description: '',
-                            birthdate: '',
-                        })
-                        .then(() => {
-                            db.collection("Contacts")
-                                .add({
-                                    user1: db.collection('Users').doc(res.user!.uid),
-                                }).then((res1) => {
-                                    var infos = res1.path.split("/");
-                                    db.collection("Users").doc(res.user!.uid).update({
-                                        contact: db.collection(infos[0]).doc(infos[1])
-                                    });
-                                });
-                        })
-                        .catch(error => {
-                            setErrorMessage(error.message)
-                            setShowAlert(true)
-                        });
-
-                    appCtx.setUser(res);
-                    appCtx.setupUserData(res);
-                    appCtx.setupContactList(res);
-                    history.push(ROUTE_HOME);
-                } else {
-                    appCtx.setUser(res);
-                    appCtx.setupUserData(res);
-                    appCtx.setupContactList(res);
-                    history.push(ROUTE_HOME);
-                }
-            });
-    }
+  
 
     return (
         <IonPage>
@@ -131,12 +81,6 @@ const Login: React.FC = () => {
                                 </IonList>
                                 <div style={{ marginTop: "1em" }}>
                                     <IonButton expand="full" onClick={handleSubmit}>Login</IonButton>
-                                </div>
-                                <div style={{ marginTop: "1em", paddingTop: "1em", borderTop: "1px solid grey" }}>
-                                    <IonButton expand="full" color="danger" onClick={handleWithGoogle}>
-                                        <IonIcon icon={logoGoogle} slot="start" />
-                                        Login with Google
-                                    </IonButton>
                                 </div>
                                 <div>
                                     <p style={{ margin: "0", marginTop: "2em" }}>Not logged in yet?</p>
