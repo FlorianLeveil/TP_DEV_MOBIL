@@ -1,8 +1,11 @@
 import { IonAvatar, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonModal, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+import { list } from 'ionicons/icons';
+import React, { useContext, useEffect, useState } from 'react';
+import AppContext from '../data/app-context';
 import firebase from '../firebase';
 
 const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: boolean) => void }> = (props) => {
+    const appCtx = useContext(AppContext);
     const [searchData, setSearchData] = useState<firebase.firestore.DocumentData[]>([])
     const [searchText, setSearchText] = useState('');
 
@@ -41,7 +44,7 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
                                     <h2>{value.data()?.username}</h2>
                                     <p>{value.data()?.email}</p>
                                 </IonLabel>
-                                <IonButton color="success" size="default">Ajouter</IonButton>
+                                <IonButton color="success" size="default" onClick={() => appCtx.addContact(value.data()?.uid)} >Ajouter</IonButton>
                             </IonItem>
                         )
                     })

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import AppContext, { Contact, defaultContact, defaultUserData, UserData } from './app-context';
 import { Plugins } from '@capacitor/core'
 import firebase from "../firebase"
+import ContactList from '../components/ContactList';
 
 const { Storage } = Plugins;
 
@@ -113,12 +114,10 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const addContact = (newContact: string) => {
-        console.log("Add contact : ", newContact);
-        // setContacts((prevState) => {
-        //     let newList = [...prevState];
-        //     newList.unshift(newContact);
-        //     return newList
-        // })
+        const newList = contacts.contactList.push(newContact)
+        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+            contactList: newList
+        })
     }
 
     const removeContact = (removeContact: string) => {
