@@ -1,47 +1,49 @@
 import React from 'react';
+import { Context } from 'vm';
 import firebase from "../firebase";
+import Contact from '../pages/Contact';
 
 
 export interface ConversationNormal {
-    id: String,
-    convName: String,
-    idUsers: String[],
+    id: string,
+    convName: string,
+    idUsers: string[],
 }
 
 export interface ConversationGroup {
-    id: String,
-    convName: String,
-    idUsers: String[],
-    idAdministrator: String,
-    pictureProfil: String | null
+    id: string,
+    convName: string,
+    idUsers: string[],
+    idAdministrator: string,
+    pictureProfil: string | null
 }
 
 export interface Message {
-    id: String,
-    idConv: String,
-    idUser: String,
+    id: string,
+    idConv: string,
+    idUser: string,
     date: number,
-    picture: String | null,
-    content: String | null
+    picture: string | null,
+    content: string | null
 }
 
 export interface Picture {
-    id: String,
+    id: string,
     filename: string,
     webPath: string,
     base64: string,
 }
 
 export interface UserData {
-    username: String,
-    name: String,
-    lastname: String,
-    contact: String,
-    email: String,
-    birthdate: String,
-    phone: String,
-    description: String,
-    uid: String,
+    username: string,
+    name: string,
+    lastname: string,
+    contact: string,
+    email: string,
+    birthdate: string,
+    phone: string,
+    description: string,
+    uid: string,
 }
 
 export const defaultUserData: UserData = {
@@ -56,11 +58,15 @@ export const defaultUserData: UserData = {
     uid: 'default',
 }
 
-export const defaultContact: firebase.firestore.DocumentData = {
-    uid: 'default',
-    contactList: [],
+export interface Contact {
+    uidUser: string,
+    contactList: string[],
 }
-    
+
+export const defaultContact: Contact = {
+    uidUser: 'default',
+    contactList: []
+}
 
 export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
 
@@ -72,10 +78,10 @@ interface AppContext {
     updateUserData: (updateUser: UserData) => void,
     updateOneFieldUserData: (updateUser: any, field: string, value: any) => void,
 
-    contacts: firebase.firestore.DocumentData,
+    contacts: Contact,
     setupContactList: (user: any) => void,
-    addContact: (newContact: String) => void,
-    removeContact: (contact: String) => void,
+    addContact: (newContact: string) => void,
+    removeContact: (contact: string) => void,
 
     // picture: Picture[]
     // addPicture: (addPicture: Picture) => void,

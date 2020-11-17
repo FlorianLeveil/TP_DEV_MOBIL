@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AppContext, { defaultUserData, UserData, defaultContact } from './app-context';
+import AppContext, { Contact, defaultContact, defaultUserData, UserData } from './app-context';
 import { Plugins } from '@capacitor/core'
-import firebase from "../firebase";
-
+import firebase from "../firebase"
 
 const { Storage } = Plugins;
 
 const AppContextProvider: React.FC = (props) => {
     const [userdata, setUserData] = useState<UserData>(defaultUserData as UserData)
-    const [contacts, setContacts] = useState<firebase.firestore.DocumentData>(defaultContact)
+    const [contacts, setContacts] = useState<Contact>(defaultContact as Contact)
 
     // Auth state
     const [user, setUser] = useState(null as firebase.User | null);
@@ -27,22 +26,30 @@ const AppContextProvider: React.FC = (props) => {
                     .onSnapshot(function (doc) {
                         const updatedProfile = doc.data() as UserData;
                         setUserData(updatedProfile)
+                        db.collection("Contacts").doc(updatedProfile.contact)
+                            .onSnapshot(function (doc) {
+                                const updatedContact = doc.data() as Contact;
+                                setContacts(updatedContact)
+                            });
                     });
+
+                
             }
         });
     }, []);
 
     useEffect(() => {
         if (didMountRef.current) {
-            Storage.set({ key: 'userdata', value: JSON.stringify(userdata) })
+            Storage.set({ key: 'userdata', value: JSON.stringify(userdata) });
+            Storage.set({ key: 'contactList', value: JSON.stringify(contacts) });
         } else {
             didMountRef.current = true;
         }
     }, [userdata, contacts])
 
-    const setupUserData = (userProps: any) => {
-        console.log("setupUserData is saying HELLO!:",userProps)
-        firebase.firestore().collection('Users').doc(userProps.user!.uid).get()
+    const setupUserData = (userId: string) => {
+        console.log("setupUserData is saying HELLO!:",userId)
+        firebase.firestore().collection('Users').doc(userId).get()
             .then(doc => {
                 const data = doc.data();
                 const aled: UserData = {
@@ -93,19 +100,19 @@ const AppContextProvider: React.FC = (props) => {
         });
     }
 
-    const setupContactList = (userProps: any) => {
-        console.log("SetupContactList is saying HELLO!:",userProps)
-        firebase.firestore().collection('Users').doc(userProps.user!.uid).get()
+    const setupContactList = (userId: string) => {
+        firebase.firestore().collection('Users').doc(userId).get()
             .then( (userPropsResult) => {
-                firebase.firestore().collection('Contacts').doc(userPropsResult.data()?.contact).get().then(
-                    (res) => setContacts(res)
-                )                
+                firebase.firestore().collection('Contacts').doc(userPropsResult.data()?.contact)
+                    .onSnapshot(function(doc) {
+                        setContacts(doc.data() as Contact)
+                    })
             }).catch( (err) => {
                 console.log("An error occured : ", err);
             });        
     }
 
-    const addContact = (newContact: String) => {
+    const addContact = (newContact: string) => {
         console.log("Add contact : ", newContact);
         // setContacts((prevState) => {
         //     let newList = [...prevState];
@@ -114,30 +121,37 @@ const AppContextProvider: React.FC = (props) => {
         // })
     }
 
-    const removeContact = (removeContact: String) => {
+    const removeContact = (removeContact: string) => {
         console.log("Remove contact : ", removeContact);
     }
 
     const initContext = async () => {
-        const userData = await Storage.get({ key: 'userdata' })
-        const storedUserData = userData.value === undefined ? JSON.parse(userData.value) : defaultUserData;
+        const userData = await Storage.get({ key: 'userdata' });
+        const contactList = await Storage.get({ key: 'contactList' });
+
+        const storedUserData = userData.value ? JSON.parse(userData.value) : defaultUserData;
+        const storedContactList = contactList.value ? JSON.parse(contactList.value) : defaultContact;
         
         didMountRef.current = false;
 
-        setUserData(storedUserData)
+        setUserData(storedUserData);
+        setContacts(storedContactList);
     }
 
     return (
         <AppContext.Provider value={{
             initContext,
+
             userdata,
             setupUserData,
             updateUserData,
             updateOneFieldUserData,
+
             contacts,
             setupContactList,
             addContact,
             removeContact,
+            
             user,
             authenticated: user !== null,
             setUser,

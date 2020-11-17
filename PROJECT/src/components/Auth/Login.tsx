@@ -45,9 +45,9 @@ const Login: React.FC = () => {
         firebase
             .auth()
             .signInWithEmailAndPassword(values.email, values.password)
-            .then( res => {
+            .then( (res) => {
                 appCtx.setUser(res);
-                appCtx.setupUserData(res);
+                appCtx.setupUserData(res.user!.uid);
                 appCtx.setupContactList(res.user!.uid);
                 history.push(ROUTE_HOME);
             })

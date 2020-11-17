@@ -44,9 +44,7 @@ const SignUp = () => {
       .auth()
       .createUserWithEmailAndPassword(values.email, values.password)
       .then((userCredential: firebase.auth.UserCredential) => {
-        appCtx.setUser(userCredential);
         const db = firebase.firestore();
-        console.log(userCredential);
         db.collection("Users").doc(userCredential.user!.uid).set({
             email: values.email,
             username: values.username,
@@ -57,8 +55,8 @@ const SignUp = () => {
             description: '',
             birthdate: values.birthdate,
             uid: userCredential.user!.uid
-          }).then((res) => {
-            appCtx.setupUserData(res);
+          })
+          .then(() => {
             db.collection("Contacts")
               .add({
                   uidUser: userCredential.user!.uid,
@@ -69,11 +67,9 @@ const SignUp = () => {
                       contact: infos[1]
                   });
               });
-            appCtx.setupContactList(res);
+            appCtx.setUser(userCredential.user!.uid);
             history.push(ROUTE_HOME);
           }).catch(error => {
-            console.error("FOUCK my contact is fucked")
-            console.warn(error)
             setErrorMessage(error.message)
             setShowAlert(true)
           });

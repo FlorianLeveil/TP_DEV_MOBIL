@@ -14,36 +14,7 @@ import firebase from 'firebase';
 const Nav: React.FC = () => {
 
 	const id_current_user = firebase.auth().currentUser?.uid
-
-	// const user_props = db.collection('Users').doc(id_current_user)
-
-    // useEffect(() => {
-    //     if ( id_current_user !== "" ) {
-    //         console.log(id_current_user);
-    //         // firebase.firestore().collection('Users').doc(id_current_user).get().then((user_props) => {
-    //         //     if (user_props.exists) {
-    //         //         const user_data_from_db = user_props.data()
-    //         //         const newUserData: UserData = {
-    //         //             phone: user_data_from_db?.phone,
-    //         //             username: user_data_from_db?.username,
-    //         //             name: user_data_from_db?.name,
-    //         //             lastname: user_data_from_db?.lastname,
-    //         //             email: user_data_from_db?.email,
-    //         //             birthdate: user_data_from_db?.birthdate,
-    //         //             description: user_data_from_db?.description,
-    //         //         }
-    //         //         appCtx.updateUserData(newUserData);
-    //         //         // setUserData(newUserData);
-    //         //     } else {
-    //         //         console.log("No such document!");
-    //         //     }
-    //         // }).catch( (error) => {
-    //         //     console.error("Error getting document:", error);
-    //         // });
-    //     } else {
-    //         console.log('Empty : ', id_current_user);
-    //     }
-    // }, [appCtx, id_current_user])
+    
     
     return (
         <IonTabs>
