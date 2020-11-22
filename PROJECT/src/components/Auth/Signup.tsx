@@ -53,6 +53,7 @@ const SignUp = () => {
             name: values.name,
             lastname: values.lastname,
             description: '',
+            picture: '',
             birthdate: values.birthdate,
             uid: userCredential.user!.uid
           })
@@ -60,7 +61,10 @@ const SignUp = () => {
             db.collection("Contacts")
               .add({
                   uidUser: userCredential.user!.uid,
-                  contactList: []
+                  contactList: [],
+                  myPendingList: [],
+                  otPendingList: [],
+                  blockedList: []
               }).then((res1) => {
                   var infos = res1.path.split("/");
                   db.collection("Users").doc(userCredential.user!.uid).update({
@@ -68,6 +72,8 @@ const SignUp = () => {
                   });
               });
             appCtx.setUser(userCredential.user!.uid);
+            appCtx.setupUserData(userCredential);
+            appCtx.setupContactList(userCredential);
             history.push(ROUTE_HOME);
           }).catch(error => {
             setErrorMessage(error.message)

@@ -1,52 +1,61 @@
-import { CameraResultType, CameraSource, FilesystemDirectory, Plugins } from '@capacitor/core'
-import { IonButton, IonCol, IonFabButton, IonGrid, IonIcon, IonListHeader, IonRow } from '@ionic/react'
-import { base64FromPath } from '@ionic/react-hooks/filesystem'
-import AppContext, { Picture} from '../data/app-context';
-import React, { useContext, useEffect, useState } from 'react';
+import { IonCol, IonFabButton, IonIcon } from '@ionic/react';
+import React, { useContext, useState } from 'react';
 import defaultProfile from '../assets/defaultProfile.jpg';
-import { camera } from 'ionicons/icons';
-import userEvent from '@testing-library/user-event';
+import { pencilOutline } from 'ionicons/icons';
 
-const { Camera, Filesystem } = Plugins;
+import { CameraResultType, CameraSource, Plugins } from '@capacitor/core';
+import AppContext from '../data/app-context';
 
+import firebase from '../firebase'
+import 'firebase/firebase';
 
+const { Camera } = Plugins;
 
-const UserPicture: React.FC<{user: string}> = (props) => {
-    // const appCtx = useContext(AppContext);
+const ProfilePicture: React.FC = () => {
+    const appCtx = useContext(AppContext);
+    const [uploading, setUploading] = useState<boolean>(false);
 
-    // const takePhotoHandler = async () => {
-    //     const photo = await Camera.getPhoto({
-    //         quality: 80,
-    //         resultType: CameraResultType.Uri,
-    //         source: CameraSource.Prompt,
-    //         width: 500,
-    //     });
+    const updatePicture = () => {
+        const storage = firebase.storage();
+        const storageRef = storage.ref();
 
-    //     if (!photo || !photo.webPath) return
+        if (!appCtx.user || !appCtx.user.uid) return
 
-    //     const base64 = await base64FromPath(photo.webPath)
-    //     const fileName = new Date().getTime() + '.jpeg'
-    //     const newPicture: Picture = {
-    //         id: 'idk',
-    //         filename: fileName,
-    //         webPath: photo.webPath,
-    //         base64: base64,
-    //     }
+        storageRef.child(appCtx.user.uid + '.jpeg').getDownloadURL()
+            .then((url) => {
+                appCtx.updateOneFieldUserData(appCtx.user, 'picture', url)
+            });
+    }
 
-    //     props.user.picture = newPicture
-    // }
+    const takePhotoHandler = async () => {
+        const photo = await Camera.getPhoto({
+            quality: 80,
+            resultType: CameraResultType.Base64,
+            source: CameraSource.Prompt,
+            width: 500,
+        });
 
-    // return (
-    //     <IonCol size="6" sizeSm="5" sizeMd="3" sizeLg="2" className="ion-text-center ion-padding">
-    //         <div className="profile-picture" style={{ backgroundImage: `url(${props.user.picture.base64 ? props.user.picture.base64 : defaultProfile})` }} />
-    //         <IonFabButton style={{ position: 'absolute', top: "15px", right: "0" }} color="danger" onClick={takePhotoHandler}>
-    //             <IonIcon icon={camera} />
-    //         </IonFabButton>
-    //     </IonCol>
-    // )
+        if (!photo || !photo.base64String || !appCtx.user || !appCtx.user.uid) return
+
+        setUploading(true);
+        const storage = firebase.storage();
+        const storageRef = storage.ref();
+        const imageRef = storageRef.child(appCtx.user.uid + '.jpeg');
+
+        const uploadTask = await imageRef.putString(photo.base64String, 'base64');
+
+        updatePicture();
+        
+        setUploading(false);
+    }
     return (
-        <IonCol></IonCol>
+        <IonCol size="6" sizeSm="5" sizeMd="3" sizeLg="2" className="ion-text-center ion-padding">
+            <div className="profile-picture" style={{ backgroundImage: `url(${appCtx.userdata.picture !== "" && !uploading ? appCtx.userdata.picture : defaultProfile})` }} />
+            <IonFabButton disabled={uploading} style={{ position: 'absolute', top: "15px", right: "0" }} color="danger" onClick={takePhotoHandler}>
+                <IonIcon icon={pencilOutline} />
+            </IonFabButton>
+        </IonCol>
     )
 }
 
-export default UserPicture
+export default ProfilePicture

@@ -1,26 +1,29 @@
-import { IonContent, IonPage } from '@ionic/react';
-import React, { useContext, useEffect, useState } from 'react';
+import { IonContent, IonLoading, IonPage } from '@ionic/react';
+import React, { useState } from 'react';
 import './Home.css';
-import "firebase/firestore";
-import AppContext from '../data/app-context';
 import HomeConversation from '../components/HomeConversation';
 
 
 const Home: React.FC = () => {
 	// eslint-disable-next-line
-	const [ showModal, setShowModal ] = useState<boolean>(false);
-	const appCtx = useContext(AppContext);
-
-	useEffect(() => {
-		setShowModal(true);
-	}, [appCtx]);
+	const [ showLoading, setShowLoading ] = useState<boolean>(true);
 
 	return (
-		<IonPage>
-			<IonContent>
-				<HomeConversation />
-			</IonContent>
-		</IonPage>
+		<>
+			<IonLoading
+				isOpen={showLoading}
+				onDidDismiss={() => setShowLoading(false)}
+				backdropDismiss={false}
+				spinner={"crescent"}
+                message={"Please wait ..."}
+                duration={2000}
+			/>
+			<IonPage>
+				<IonContent>
+						<HomeConversation />
+				</IonContent>
+			</IonPage>
+		</>
 	);
 };
 

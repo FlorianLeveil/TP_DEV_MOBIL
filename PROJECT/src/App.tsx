@@ -24,10 +24,9 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN, ROUTE_PROFILE, ROUTE_CONNEXION } from './nav/Routes';
+import {ROUTE_CONTACT, ROUTE_HOME, ROUTE_GROUP_MAIN, ROUTE_PROFILE } from './nav/Routes';
 import Nav from './nav/Nav';
 import AppContext from './data/app-context';
-import Connexion from './pages/Connexion';
 
 const App: React.FC = () => {
 
@@ -49,7 +48,6 @@ const App: React.FC = () => {
             <Switch>
               <PrivateRoute path={ROUTE_CONTACT} component={Nav} />
               <PrivateRoute path={ROUTE_GROUP_MAIN} component={Nav} />
-              <PrivateRoute path={ROUTE_CONNEXION} component={Connexion}/>
               <PrivateRoute exact path={`${ROUTE_PROFILE}:id`} component={Nav} />
               <PrivateRoute path={ROUTE_HOME} component={Nav} />
               <Route path="/auth" component={AuthRoutes} />

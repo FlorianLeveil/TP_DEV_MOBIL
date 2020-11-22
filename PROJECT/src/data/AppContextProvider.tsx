@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import AppContext, { Contact, defaultContact, defaultUserData, UserData } from './app-context';
 import { Plugins } from '@capacitor/core'
 import firebase from "../firebase"
-import ContactList from '../components/ContactList';
 
 const { Storage } = Plugins;
 
@@ -27,14 +26,14 @@ const AppContextProvider: React.FC = (props) => {
                     .onSnapshot(function (doc) {
                         const updatedProfile = doc.data() as UserData;
                         setUserData(updatedProfile)
-                        db.collection("Contacts").doc(updatedProfile.contact)
+                        if ( updatedProfile.contact !== '' ) {
+                            db.collection("Contacts").doc(updatedProfile.contact)
                             .onSnapshot(function (doc) {
                                 const updatedContact = doc.data() as Contact;
                                 setContacts(updatedContact)
                             });
+                        }
                     });
-
-                
             }
         });
     }, []);
@@ -48,9 +47,8 @@ const AppContextProvider: React.FC = (props) => {
         }
     }, [userdata, contacts])
 
-    const setupUserData = (userId: string) => {
-        console.log("setupUserData is saying HELLO!:",userId)
-        firebase.firestore().collection('Users').doc(userId).get()
+    const setupUserData = (user: any) => {
+        firebase.firestore().collection('Users').doc(user.user.uid).get()
             .then(doc => {
                 const data = doc.data();
                 const aled: UserData = {
@@ -58,6 +56,7 @@ const AppContextProvider: React.FC = (props) => {
                     username: data?.username,
                     name: data?.name,
                     lastname: data?.lastname,
+                    picture: data?.picture,
                     contact: data?.contact,
                     email: data?.email,
                     birthdate: data?.birthdate,
@@ -71,38 +70,27 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const updateUserData = (user: any) => {
-        firebase.firestore().collection('Users').doc(user!.uid).get()
-            .then(doc => {
-                const data = doc.data();
-                const aled: UserData = {
-                    phone: data?.phone,
-                    username: data?.username,
-                    name: data?.name,
-                    contact: data?.contact,
-                    lastname: data?.lastname,
-                    email: data?.email,
-                    birthdate: data?.birthdate,
-                    description: data?.description,
-                    uid: data?.uid,
+        const db = firebase.firestore();
+        const docRef = db.collection('Users').doc(user?.uid);
+        db.runTransaction((transaction) => {
+            return transaction.get(docRef).then( (doc) => {
+                if (!doc.exists) {
+                    console.log("Fail to update profile")
+                } else {
+                    transaction.update(docRef, user)
                 }
-                setUserData(aled);
-            }).catch((err) => {
-                console.log("An error occured : ", err)
             })
+        })
     }
 
     const updateOneFieldUserData = (user: any, fieldName: string, value: any) => {
         firebase.firestore().collection('Users').doc(user!.uid).update({
             [fieldName]: value
-        }).then(() => {
-            updateUserData(user);
-        }).catch((err) => {
-            console.error("Got errored with : ", err);
         });
     }
 
-    const setupContactList = (userId: string) => {
-        firebase.firestore().collection('Users').doc(userId).get()
+    const setupContactList = (user: any) => {
+        firebase.firestore().collection('Users').doc(user.user.uid).get()
             .then( (userPropsResult) => {
                 firebase.firestore().collection('Contacts').doc(userPropsResult.data()?.contact)
                     .onSnapshot(function(doc) {
@@ -114,14 +102,68 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const addContact = (newContact: string) => {
-        const newList = contacts.contactList.push(newContact)
-        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
-            contactList: newList
-        })
+        if ( contacts.myPendingList.includes(newContact) || contacts.otPendingList.includes(newContact) ) {
+            // Add to my waiting contact list
+            const filtered = contacts.otPendingList.filter((value, index, arr) => { return value !== newContact; });
+            contacts.contactList.push(newContact);
+            firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+                contactList: contacts.contactList,
+                otPendingList: filtered
+            });
+
+            // Add to other contact list
+            firebase.firestore().collection('Contacts').where('uidUser', '==', newContact).get()
+                .then((res) => {
+                    let ctt = res.docs[0].data() as Contact;
+                    const cttFiltered = ctt.myPendingList.filter((value, index, arr) => { return value !== userdata.uid; });
+                    ctt.contactList.push(userdata.uid);
+                    firebase.firestore().collection('Users').where('uid', '==', newContact).get()
+                        .then((res) => {
+                            firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                                contactList: ctt.contactList,
+                                myPendingList: cttFiltered
+                            })
+                        })
+                })
+        } else {
+            // Add to my waiting contact list
+            contacts.myPendingList.push(newContact)
+            firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+                myPendingList: contacts.myPendingList
+            });
+
+            // Add to other contact list
+            firebase.firestore().collection('Contacts').where('uidUser', '==', newContact).get()
+                .then((res) => {
+                    let ctt = res.docs[0].data() as Contact;
+                    ctt.otPendingList.push(userdata.uid);
+                    firebase.firestore().collection('Users').where('uid', '==', newContact).get()
+                        .then((res) => {
+                            firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                                otPendingList: ctt.otPendingList
+                            })
+                        })
+                })
+        }
     }
 
     const removeContact = (removeContact: string) => {
-        console.log("Remove contact : ", removeContact);
+        const filtered = contacts.contactList.filter((value, index, arr) => { return value !== removeContact; });
+        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+            contactList: filtered
+        });
+
+        firebase.firestore().collection('Contacts').where('uidUser', '==', removeContact).get()
+                .then((res) => {
+                    let ctt = res.docs[0].data() as Contact;
+                    const filtered = ctt.contactList.filter((value, index, arr) => { return value !== removeContact; });
+                    firebase.firestore().collection('Users').where('uid', '==', removeContact).get()
+                        .then((res) => {
+                            firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                                contactList: filtered
+                            })
+                        })
+                })
     }
 
     const initContext = async () => {

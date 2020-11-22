@@ -1,5 +1,4 @@
 import React from 'react';
-import { Context } from 'vm';
 import firebase from "../firebase";
 import Contact from '../pages/Contact';
 
@@ -38,6 +37,7 @@ export interface UserData {
     username: string,
     name: string,
     lastname: string,
+    picture: string | null,
     contact: string,
     email: string,
     birthdate: string,
@@ -50,6 +50,7 @@ export const defaultUserData: UserData = {
     phone: 'default',
     username: 'default',
     name: 'default',
+    picture: null,
     contact: '',
     lastname: 'default',
     email: 'default',
@@ -61,11 +62,17 @@ export const defaultUserData: UserData = {
 export interface Contact {
     uidUser: string,
     contactList: string[],
+    myPendingList: string[],
+    otPendingList: string[],
+    blockedList: string[]
 }
 
 export const defaultContact: Contact = {
     uidUser: 'default',
-    contactList: []
+    contactList: [],
+    myPendingList: [],
+    otPendingList: [],
+    blockedList: []
 }
 
 export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
@@ -82,10 +89,6 @@ interface AppContext {
     setupContactList: (user: any) => void,
     addContact: (newContact: string) => void,
     removeContact: (contact: string) => void,
-
-    // picture: Picture[]
-    // addPicture: (addPicture: Picture) => void,
-    // updatePicture: (updatePicture: Picture) => void,
 
     // message: Message[],
     // addMessage: (message: Message) => void,
@@ -111,9 +114,6 @@ const AppContext = React.createContext<AppContext>({
     setupContactList: () => { },
     addContact: () => { },
     removeContact: () => { },
-    // picture: [],
-    // addPicture: () => { },
-    // updatePicture: () => { },
     // message: [],
     // addMessage: () => { },
     // conversationNormal: [],

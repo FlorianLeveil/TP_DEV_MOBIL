@@ -8,6 +8,7 @@ import UserInformationItem from '../components/UserInformation';
 import ResponsiveContent from '../components/ResponsiveContent';
 
 import Logout from '../components/Auth/Logout';
+import ProfilePicture from '../components/ProfilePicture';
 
 const Profile: React.FC = () => {
   const appCtx = useContext(AppContext);
@@ -19,13 +20,16 @@ const Profile: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow id="headerRow" className="ion-justify-content-around ion-align-items-center">
             <Suspense fallback={<IonSpinner />}>
+              <ProfilePicture />
             </Suspense>
           </IonRow>
           <IonRow>
             <ResponsiveContent>
               <IonList className="ion-margin ion-padding" mode="ios">
-                <IonListHeader className="ion-padding-bottom">
-                  <IonTitle>Informations</IonTitle>
+                <IonListHeader>
+                  <IonTitle>
+                    Informations
+                  </IonTitle>
                 </IonListHeader>
                 <UserInformationItem userdata={userdata.username} field='username' friendlyName='Pseudo' unit='' type='text' />
                 <UserInformationItem userdata={userdata.name} field='name' friendlyName='Name' unit='' type='text' />
@@ -35,7 +39,7 @@ const Profile: React.FC = () => {
                   <IonLabel></IonLabel>
                   <Logout>
                     <IonButton>
-                      <IonLabel>Disconnect</IonLabel>
+                      <IonLabel>Logout</IonLabel>
                       <IonIcon slot='end' icon={ exitOutline }/>
                     </IonButton>
                   </Logout>
