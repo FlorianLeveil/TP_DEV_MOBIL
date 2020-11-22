@@ -156,7 +156,7 @@ const AppContextProvider: React.FC = (props) => {
         firebase.firestore().collection('Contacts').where('uidUser', '==', removeContact).get()
                 .then((res) => {
                     let ctt = res.docs[0].data() as Contact;
-                    const filtered = ctt.contactList.filter((value, index, arr) => { return value !== removeContact; });
+                    const filtered = ctt.contactList.filter((value, index, arr) => { return value !== userdata.uid; });
                     firebase.firestore().collection('Users').where('uid', '==', removeContact).get()
                         .then((res) => {
                             firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
