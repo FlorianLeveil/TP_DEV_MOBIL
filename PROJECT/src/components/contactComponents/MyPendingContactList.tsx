@@ -46,7 +46,7 @@ const MyPendingContactList: React.FC = () => {
                             <h2>{value.data()?.username}</h2>
                             <p>{value.data()?.email}</p>
                         </IonLabel>
-                        <IonButton size="large" fill="clear" color='danger' >
+                        <IonButton onClick={() => appCtx.delPendingInvite(value.data().uid)} size="large" fill="clear" color='danger' >
                             <IonIcon size="large" slot='icon-only' icon={closeOutline} color='danger' />
                         </IonButton>
                     </IonItem>

@@ -34,7 +34,7 @@ const ContactList: React.FC = () => {
             return (
                 <IonItem>
                     <IonLabel>
-                        No contacts for now, add some here 
+                        Pas encore d'amis :( Ajoutez-en ici -> 
                     </IonLabel>
                     <IonButton onClick={() => setShowModal(true)}>
                         <IonIcon slot='icon-only' icon={ addOutline } />

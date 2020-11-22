@@ -88,7 +88,9 @@ interface AppContext {
     contacts: Contact,
     setupContactList: (user: any) => void,
     addContact: (newContact: string) => void,
-    removeContact: (contact: string) => void,
+    delPendingInvite: (contactId: string) => void,
+    refuseInvite: (contactId: string) => void,
+    removeContact: (contactId: string) => void,
 
     // message: Message[],
     // addMessage: (message: Message) => void,
@@ -106,13 +108,17 @@ interface AppContext {
 
 const AppContext = React.createContext<AppContext>({
     initContext: () => { },
+
     userdata: defaultUserData,
     setupUserData: () => { },
     updateUserData: () => { },
     updateOneFieldUserData: () => {},
+
     contacts: defaultContact,
     setupContactList: () => { },
     addContact: () => { },
+    delPendingInvite: () => { },
+    refuseInvite: () => { },
     removeContact: () => { },
     // message: [],
     // addMessage: () => { },

@@ -147,6 +147,48 @@ const AppContextProvider: React.FC = (props) => {
         }
     }
 
+    const refuseInvite = ( inviteId: string ) => {
+        // Remove waiting invite from list
+        const cttFiltered = contacts.otPendingList.filter((value, index, arr) => { return value !== inviteId; });
+        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+            otPendingList: cttFiltered
+        });
+
+        // Add to other contact list
+        firebase.firestore().collection('Contacts').where('uidUser', '==', inviteId).get()
+            .then((res) => {
+                let ctt = res.docs[0].data() as Contact;
+                const cttFiltered = ctt.myPendingList.filter((value, index, arr) => { return value !== userdata.uid; });
+                firebase.firestore().collection('Users').where('uid', '==', inviteId).get()
+                    .then((res) => {
+                        firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                            myPendingList: cttFiltered
+                        })
+                    })
+            })
+    }
+
+    const delPendingInvite = (inviteId: string) => {
+        // Remove waiting invite from list
+        const cttFiltered = contacts.myPendingList.filter((value, index, arr) => { return value !== inviteId; });
+        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+            myPendingList: cttFiltered
+        });
+
+        // Add to other contact list
+        firebase.firestore().collection('Contacts').where('uidUser', '==', inviteId).get()
+            .then((res) => {
+                let ctt = res.docs[0].data() as Contact;
+                const cttFiltered = ctt.otPendingList.filter((value, index, arr) => { return value !== userdata.uid; });
+                firebase.firestore().collection('Users').where('uid', '==', inviteId).get()
+                    .then((res) => {
+                        firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                            otPendingList: cttFiltered
+                        })
+                    })
+            })
+    }
+
     const removeContact = (removeContact: string) => {
         const filtered = contacts.contactList.filter((value, index, arr) => { return value !== removeContact; });
         firebase.firestore().collection('Contacts').doc(userdata.contact).update({
@@ -191,6 +233,8 @@ const AppContextProvider: React.FC = (props) => {
             contacts,
             setupContactList,
             addContact,
+            refuseInvite,
+            delPendingInvite,
             removeContact,
             
             user,

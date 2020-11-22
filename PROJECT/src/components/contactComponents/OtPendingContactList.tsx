@@ -49,7 +49,7 @@ const OtPendingContactList: React.FC = () => {
                         <IonButton size="large" fill="clear" color='success' onClick={() => appCtx.addContact(value.data().uid)} >
                             <IonIcon size="large" slot='icon-only' icon={checkmarkOutline} color='success' />
                         </IonButton>
-                        <IonButton size="large" fill="clear" color='danger' >
+                        <IonButton size="large" fill="clear" color='danger' onClick={() => appCtx.refuseInvite(value.data().uid)} >
                             <IonIcon size="large" slot='icon-only' icon={closeOutline} color='danger' />
                         </IonButton>
                     </IonItem>
