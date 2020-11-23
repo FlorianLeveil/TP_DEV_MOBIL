@@ -1,10 +1,9 @@
-import { IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonLoading, IonModal, IonRow, IonSearchbar, IonSegment, IonSegmentButton, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonItem, IonLabel, IonList, IonLoading, IonModal, IonRow, IonSearchbar, IonSegment, IonSegmentButton, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../../data/app-context';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import firebase from '../../firebase';
 
-import { closeOutline } from 'ionicons/icons';
 
 const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: boolean) => void }> = (props) => {
     const appCtx = useContext(AppContext);
@@ -18,26 +17,57 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
     }, 1000);
 
     useEffect(() => {
-        firebase.firestore().collection('Users').orderBy(searchOpti).get()
-            .then((res) => {
-                setSearchData(res.docs)
-            })
-    // eslint-disable-next-line
-    }, [])
-
-    useEffect(() => {
         if (searchText.length >= 3) {
             firebase.firestore().collection('Users').orderBy(searchOpti).startAt(searchText).endAt(searchText + "\uf8ff").get()
                 .then((res) => {
                     setSearchData(res.docs)
                 })
-        } else {
-            firebase.firestore().collection('Users').orderBy(searchOpti).get()
-                .then((res) => {
-                    setSearchData(res.docs)
-                })
         }
     }, [searchText, searchOpti])
+
+    const fillResults = () => {
+        if ( searchData.length === 0 ) {
+            return (
+                <IonItem>
+                    <IonLabel>
+                        Aucun résultats :'(
+                    </IonLabel>
+                </IonItem>
+            )
+        } else {
+            return searchData.map((value) => {
+                return (
+                    <IonItem key={value.data().uid}>
+                        <IonAvatar slot="start">
+                            <img alt='Profile' src={value.data()?.picture ? value.data()?.picture : defaultProfile} />
+                        </IonAvatar>
+                        <IonLabel>
+                            <h2>
+                                {
+                                    appCtx.user!.uid === value.data().uid ? value.data()?.username + ' (Moi)' : value.data()?.username
+                                }
+                            </h2>
+                            <p>{value.data()?.email}</p>
+                        </IonLabel>
+                        <IonButton disabled={
+                                        appCtx.contacts.contactList.includes(value.data().uid) ||
+                                        appCtx.contacts.myPendingList.includes(value.data().uid) ||
+                                        appCtx.contacts.blockedList.includes(value.data().uid) ||
+                                        appCtx.contacts.otPendingList.includes(value.data().uid) ||
+                                        appCtx.user!.uid === value.data().uid
+                                    } color="success" size="default" onClick={() => {
+                            setShowLoading(true);
+                            appCtx.addContact(value.data()?.uid);
+                            setSearchData([]);
+                            props.setShowModal(false);
+                        }} >
+                            Ajouter
+                        </IonButton>
+                    </IonItem>
+                )
+            })
+        }
+    }
 
     return (
         <>
@@ -73,37 +103,7 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
                 <IonContent fullscreen>
                     <IonList>
                     {
-                        searchData.map((value) => {
-                            return (
-                                <IonItem key={value.data().uid}>
-                                    <IonAvatar slot="start">
-                                        <img alt='Profile' src={value.data()?.picture ? value.data()?.picture : defaultProfile} />
-                                    </IonAvatar>
-                                    <IonLabel>
-                                        <h2>
-                                            {
-                                                appCtx.user!.uid === value.data().uid ? value.data()?.username + ' (Moi)' : value.data()?.username
-                                            }
-                                        </h2>
-                                        <p>{value.data()?.email}</p>
-                                    </IonLabel>
-                                    <IonButton disabled={
-                                                    appCtx.contacts.contactList.includes(value.data().uid) ||
-                                                    appCtx.contacts.myPendingList.includes(value.data().uid) ||
-                                                    appCtx.contacts.blockedList.includes(value.data().uid) ||
-                                                    appCtx.contacts.otPendingList.includes(value.data().uid) ||
-                                                    appCtx.user!.uid === value.data().uid
-                                                } color="success" size="default" onClick={() => {
-                                        setShowLoading(true);
-                                        appCtx.addContact(value.data()?.uid);
-                                        setSearchData([]);
-                                        props.setShowModal(false);
-                                    }} >
-                                        Ajouter
-                                    </IonButton>
-                                </IonItem>
-                            )
-                        })
+                        fillResults()
                     }
                     </IonList>
                 </IonContent>
