@@ -21,9 +21,16 @@ const Nav: React.FC = () => {
     }, [appCtx.contacts.otPendingList])
     
     const isNotif = () => {
+        if ( appCtx.contacts.otPendingList.length > 99 ) {
+            return (
+                <IonBadge color="danger">
+                    99+
+                </IonBadge>
+            )
+        }
         if ( appCtx.contacts.otPendingList.length >= 1 ) {
             return (
-                <IonBadge slot="end" color="danger">
+                <IonBadge color="danger">
                     {appCtx.contacts.otPendingList.length}
                 </IonBadge>
             )
@@ -31,7 +38,7 @@ const Nav: React.FC = () => {
     }
 
     return (
-        <IonTabs>
+        <IonTabs> 
             <IonRouterOutlet>
                 <Route path={ROUTE_CONTACT} component={Contact} exact />
                 <Route path={ROUTE_PROFILE + id_current_user} component={Profile} exact />
@@ -40,7 +47,7 @@ const Nav: React.FC = () => {
                 <Redirect path={ROUTE_NAV} exact to={ROUTE_HOME} />
 
             </IonRouterOutlet>
-            <IonTabBar slot="top">
+            <IonTabBar color="primary" slot="top">
                 <IonTabButton tab="Home" href={ROUTE_HOME}>
                     <IonIcon icon={home} />
                     <IonLabel>Messages</IonLabel>
