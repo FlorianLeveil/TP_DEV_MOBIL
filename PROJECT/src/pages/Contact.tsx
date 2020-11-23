@@ -1,4 +1,5 @@
-import { IonButton, IonCol, IonContent, IonGrid, IonPage, IonRow } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonIcon, IonPage, IonRow } from '@ionic/react';
+import { add, arrowForwardCircle } from 'ionicons/icons';
 import React, { useState } from 'react';
 import ContactAddUserModal from '../components/contactComponents/ContactAddUserModal';
 import ContactList from '../components/contactComponents/ContactList';
@@ -11,26 +12,24 @@ const Contact: React.FC = () => {
 	return (
 		<IonPage>
 			<IonContent>
+				<IonFab vertical="bottom" horizontal="end" slot="fixed">
+          			<IonFabButton onClick={() => setShowModal(true)}>
+            			<IonIcon icon={add} />
+          			</IonFabButton>
+        		</IonFab>
 				<ContactAddUserModal showModal={showModal} setShowModal={setShowModal}/>
-				<IonGrid className='ion-margin'>
+				<IonGrid>
 					<IonRow>
-						<IonCol></IonCol>
-						<IonCol size="8">
-							<IonButton expand="block" onClick={() => setShowModal(true)} color="success">Ajouter un contact</IonButton>
+						<IonCol size-sm>
+							<OtPendingContactList />
 						</IonCol>
-						<IonCol></IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<ContactList />
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
+						<IonCol size-sm>
 							<MyPendingContactList />
 						</IonCol>
-						<IonCol>
-							<OtPendingContactList />
+					</IonRow>
+					<IonRow>
+						<IonCol size="12">
+							<ContactList />
 						</IonCol>
 					</IonRow>
 				</IonGrid>

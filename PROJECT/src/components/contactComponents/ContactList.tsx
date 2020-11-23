@@ -34,11 +34,8 @@ const ContactList: React.FC = () => {
             return (
                 <IonItem>
                     <IonLabel>
-                        Pas encore d'amis :( Ajoutez-en ici -> 
+                        Pas encore de contact :( 
                     </IonLabel>
-                    <IonButton onClick={() => setShowModal(true)}>
-                        <IonIcon slot='icon-only' icon={ addOutline } />
-                    </IonButton>
                 </IonItem>
             )
         } else {
@@ -66,8 +63,8 @@ const ContactList: React.FC = () => {
         <>
             <ContactAddUserModal showModal={showModal} setShowModal={setShowModal}/>
             <IonList>
-                <IonListHeader>
-                    <IonTitle>Liste des contacts</IonTitle>
+                <IonListHeader >
+                    <IonLabel>Liste des contact(s)</IonLabel>
                 </IonListHeader>
                 {
                     showContactList()

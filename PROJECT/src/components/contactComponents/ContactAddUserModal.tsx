@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonLoading, IonModal, IonRow, IonSearchbar, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonLoading, IonModal, IonRow, IonSearchbar, IonSegment, IonSegmentButton, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../../data/app-context';
 import defaultProfile from '../../assets/defaultProfile.jpg';
@@ -44,33 +44,30 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
             <IonModal isOpen={props.showModal} backdropDismiss={false}>
                 <IonHeader translucent>
                     <IonToolbar>
-                        <IonGrid>
-                            <IonRow>
-                                <IonCol size="10">
-                                    <IonTitle class="ion-text-center">Recherche Contact</IonTitle>
-                                </IonCol>
-                                <IonCol size="2">
-                                    <IonButton onClick={() => {
-                                        props.setShowModal(false)
-                                        setSearchData([])
-                                    }}>
-                                        <IonIcon slot="icon-only" icon={ closeOutline } />
-                                    </IonButton>
-                                </IonCol>
-                            </IonRow>
-                            <IonRow>
-                                <IonCol size="9">
-                                    <IonSearchbar autocorrect="off" onIonChange={e => setSearchText(e.detail.value!)} showCancelButton='focus'></IonSearchbar>
-                                </IonCol>
-                                <IonCol size="3">
-                                    <IonSelect cancelText="Retour" interface='action-sheet' value={searchOpti} onIonChange={e => setSearchOpti(e.detail.value)}>
-                                        <IonSelectOption value="email">Email</IonSelectOption>
-                                        <IonSelectOption value="username">Pseudo</IonSelectOption>
-                                    </IonSelect>
-                                </IonCol>
-                            </IonRow>
-                        </IonGrid>
+                            <IonTitle>Recherche Contact</IonTitle>
+                            <IonButton slot="end" type="reset" fill="clear" onClick={() => {
+                                props.setShowModal(false)
+                                setSearchData([])
+                            }}>Retour</IonButton>
                     </IonToolbar>
+
+                    <IonGrid>
+                    <IonRow>
+                        <IonCol size="12">
+                        <IonSegment value={searchOpti} onIonChange={e => setSearchOpti(e.detail.value!)}>
+                            <IonSegmentButton value="email">
+                                <IonLabel>Email</IonLabel>
+                            </IonSegmentButton>
+                            <IonSegmentButton value="username">
+                                <IonLabel>Pseudo</IonLabel>
+                            </IonSegmentButton>
+                        </IonSegment>
+                        </IonCol>
+                        <IonCol size="12">
+                            <IonSearchbar autocorrect="off" onIonChange={e => setSearchText(e.detail.value!)} showCancelButton='focus'></IonSearchbar>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
                 </IonHeader>
 
                 <IonContent fullscreen>

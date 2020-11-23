@@ -31,7 +31,7 @@ const OtPendingContactList: React.FC = () => {
             return (
                 <IonItem>
                     <IonLabel>
-                        Aucunes demandes pour l'instant 
+                        Aucunes demandes pour l'instant.
                     </IonLabel>
                 </IonItem>
             )
@@ -61,7 +61,7 @@ const OtPendingContactList: React.FC = () => {
     return (
         <IonList>
             <IonListHeader>
-                <IonTitle>Vous a demandé :</IonTitle>
+                <IonLabel>Demande(s) de contact</IonLabel>
             </IonListHeader>
             {
                 showOtPendingList()

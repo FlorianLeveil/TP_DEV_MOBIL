@@ -59,7 +59,7 @@ const MyPendingContactList: React.FC = () => {
         <>
             <IonList>
                 <IonListHeader>
-                    <IonTitle>Demandes en attente</IonTitle>
+                    <IonLabel>Demande(s) de contact envoyé</IonLabel>
                 </IonListHeader>
                 {
                     showMyPendingContactList()
