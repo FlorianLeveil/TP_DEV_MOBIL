@@ -4,7 +4,8 @@ import firebase from "../../firebase";
 import "firebase/firestore";
 import AppContext from "../../data/app-context";
 import { ROUTE_HOME, ROUTE_LOGIN } from "../../nav/Routes";
-import { IonAlert, IonButton, IonContent, IonInput, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
+import { IonAlert, IonButton, IonContent, IonDatetime, IonInput, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
+import { today } from "ionicons/icons";
 
 interface FormItems {
   username: string;
@@ -13,13 +14,23 @@ interface FormItems {
   phone: string;
   email: string;
   password: string;
-  birthdate: number;
+  birthdate: string;
   
 };
 const SignUp = () => {
+  const [showAlert1, setShowAlert1] = useState(false);
   const appCtx = useContext(AppContext);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const currentDate = new Date()
+
+  function calculateAge(birthday: Date) {
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+
   // const [picture, setPicture] = useState<Picture>();
   // const defaultImg = ''
   const [values, setValues] = useState({
@@ -29,7 +40,7 @@ const SignUp = () => {
     email: "",
     password: "",
     phone: "",
-    birthdate: 0
+    birthdate: currentDate.toISOString()
 
   } as FormItems);
 
@@ -37,9 +48,14 @@ const SignUp = () => {
   const handleClick = () => {
     history.push(ROUTE_LOGIN)
   }
-
+ 
   const handleSubmit = (event: any) => {
     event?.preventDefault();
+    const currentAgeOfUser = calculateAge(new Date(values.birthdate))
+    if (currentAgeOfUser < 13) {
+      setShowAlert1(true)
+      return
+    }
     firebase
       .auth()
       .createUserWithEmailAndPassword(values.email, values.password)
@@ -131,7 +147,7 @@ const SignUp = () => {
                   </IonItem>
                   <IonItem>
                     <IonLabel position="floating">Birthdate</IonLabel>
-                    <IonInput type="date" name="birthdate" value={values.birthdate} onIonChange={handleChange} ></IonInput>
+                    <IonDatetime name="birthdate" displayFormat="DD/MM/YYYY" max={currentDate.toISOString()} value={values.birthdate} onIonChange={handleChange} ></IonDatetime>
                   </IonItem>
                 </IonList>
                 <div style={{ marginTop: "1em" }}>
@@ -162,6 +178,14 @@ const SignUp = () => {
           }
         ]}
       />
+      <IonAlert
+      isOpen={showAlert1}
+      onDidDismiss={() => setShowAlert1(false)}
+      header={'Alert'}
+      subHeader={'Date de naissance'}
+      message={'Vous devez au minimum avoir 13 ans pour pouvoir utiliser cette aplication.'}
+      buttons={['OK']}
+    />
     </IonPage>
   );
 }
