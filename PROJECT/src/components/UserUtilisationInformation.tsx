@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import AppContext, { UserInformationFields } from '../data/app-context';
 import "firebase/firestore";
 
-const UserInformationItem: React.FC<{userdata: any, field: UserInformationFields, friendlyName: string, unit: String, type: string }> = (props) => {
+const UserUtilisationInformation: React.FC<{userdata: any, field: UserInformationFields, friendlyName: string, unit: String, type: string }> = (props) => {
     const [showAlert, setShowAlert] = useState(false);
     const appCtx = useContext(AppContext);
 
@@ -58,4 +58,4 @@ const UserInformationItem: React.FC<{userdata: any, field: UserInformationFields
     )
 }
 
-export default UserInformationItem
+export default UserUtilisationInformation

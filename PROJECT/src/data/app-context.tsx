@@ -54,7 +54,7 @@ export const defaultUserData: UserData = {
     contact: '',
     lastname: 'default',
     email: 'default',
-    birthdate: 'default',
+    birthdate: 'IonLabel',
     description: 'default',
     uid: 'default',
 }
