@@ -2,28 +2,11 @@ import React from 'react';
 import firebase from "../firebase";
 import Contact from '../pages/Contact';
 
-
-export interface ConversationNormal {
-    id: string,
-    convName: string,
-    idUsers: string[],
-}
-
-export interface ConversationGroup {
-    id: string,
-    convName: string,
-    idUsers: string[],
-    idAdministrator: string,
-    pictureProfil: string | null
-}
-
 export interface Message {
-    id: string,
-    idConv: string,
-    idUser: string,
-    date: number,
-    picture: string | null,
-    content: string | null
+    convId: string,
+    message: any,
+    sendedAt: Date,
+    senderId: string
 }
 
 export interface Picture {
@@ -75,6 +58,20 @@ export const defaultContact: Contact = {
     blockedList: []
 }
 
+export interface Conversation {
+    convId: string,
+    lastMessage: string,
+    messages: string[],
+    users: string[]
+}
+
+export const defaultConversation: Conversation = {
+    convId: "",
+    lastMessage: "",
+    messages: [],
+    users: []
+}
+
 export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
 
 interface AppContext {
@@ -92,14 +89,9 @@ interface AppContext {
     refuseInvite: (contactId: string) => void,
     removeContact: (contactId: string) => void,
 
-    // message: Message[],
-    // addMessage: (message: Message) => void,
+    conversations: Conversation[],
+    sendMessage: (convId: string, message: any) => void,
 
-    // conversationNormal: ConversationNormal[],
-    // addConversationNormal: (conversationNormal: ConversationNormal) => void,
-
-    // conversationGroup: ConversationGroup[],
-    // addConversationGroup: (conversationGroup: ConversationGroup) => void,
     user: firebase.User | null,
     authenticated: boolean;
     setUser: any;
@@ -120,12 +112,11 @@ const AppContext = React.createContext<AppContext>({
     delPendingInvite: () => { },
     refuseInvite: () => { },
     removeContact: () => { },
-    // message: [],
-    // addMessage: () => { },
-    // conversationNormal: [],
-    // addConversationNormal: () => {},
-    // conversationGroup: [],
-    // addConversationGroup: () => {},
+    
+    conversations: [],
+    startConv: () => { },
+    sendMessage: () => { },
+
     user: null,
     authenticated: false,
     setUser: () => {},

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AppContext, { Contact, defaultContact, defaultUserData, UserData } from './app-context';
+import AppContext, { Contact, Conversation, defaultContact, defaultUserData, UserData } from './app-context';
 import { Plugins } from '@capacitor/core'
 import firebase from "../firebase"
 
@@ -8,6 +8,7 @@ const { Storage } = Plugins;
 const AppContextProvider: React.FC = (props) => {
     const [userdata, setUserData] = useState<UserData>(defaultUserData as UserData)
     const [contacts, setContacts] = useState<Contact>(defaultContact as Contact)
+    const [conversations, setConversations] = useState<Conversation[]>([])
 
     // Auth state
     const [user, setUser] = useState(null as firebase.User | null);
@@ -34,6 +35,15 @@ const AppContextProvider: React.FC = (props) => {
                             });
                         }
                     });
+
+                db.collection("Conversations").where("users", "array-contains", firebaseUser.uid)
+                    .onSnapshot((res) => {
+                        let list : Conversation[] = [];
+                        res.docs.forEach((elem) => {
+                            list.push(elem.data() as Conversation)
+                        })
+                        setConversations(list)
+                    });
             }
         });
     }, []);
@@ -42,10 +52,11 @@ const AppContextProvider: React.FC = (props) => {
         if (didMountRef.current) {
             Storage.set({ key: 'userdata', value: JSON.stringify(userdata) });
             Storage.set({ key: 'contactList', value: JSON.stringify(contacts) });
+            Storage.set({ key: 'conversations', value: JSON.stringify(conversations) });
         } else {
             didMountRef.current = true;
         }
-    }, [userdata, contacts])
+    }, [userdata, contacts, conversations])
 
     const setupUserData = (user: any) => {
         firebase.firestore().collection('Users').doc(user.user.uid).get()
@@ -102,24 +113,25 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const addContact = (newContact: string) => {
+        const db = firebase.firestore()
         if ( contacts.myPendingList.includes(newContact) || contacts.otPendingList.includes(newContact) ) {
             // Add to my waiting contact list
             const filtered = contacts.otPendingList.filter((value, index, arr) => { return value !== newContact; });
             contacts.contactList.push(newContact);
-            firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+            db.collection('Contacts').doc(userdata.contact).update({
                 contactList: contacts.contactList,
                 otPendingList: filtered
             });
 
             // Add to other contact list
-            firebase.firestore().collection('Contacts').where('uidUser', '==', newContact).get()
+            db.collection('Contacts').where('uidUser', '==', newContact).get()
                 .then((res) => {
                     let ctt = res.docs[0].data() as Contact;
                     const cttFiltered = ctt.myPendingList.filter((value, index, arr) => { return value !== userdata.uid; });
                     ctt.contactList.push(userdata.uid);
-                    firebase.firestore().collection('Users').where('uid', '==', newContact).get()
+                    db.collection('Users').where('uid', '==', newContact).get()
                         .then((res) => {
-                            firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                            db.collection('Contacts').doc(res.docs[0].data().contact).update({
                                 contactList: ctt.contactList,
                                 myPendingList: cttFiltered
                             })
@@ -128,18 +140,18 @@ const AppContextProvider: React.FC = (props) => {
         } else {
             // Add to my waiting contact list
             contacts.myPendingList.push(newContact)
-            firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+            db.collection('Contacts').doc(userdata.contact).update({
                 myPendingList: contacts.myPendingList
             });
 
             // Add to other contact list
-            firebase.firestore().collection('Contacts').where('uidUser', '==', newContact).get()
+            db.collection('Contacts').where('uidUser', '==', newContact).get()
                 .then((res) => {
                     let ctt = res.docs[0].data() as Contact;
                     ctt.otPendingList.push(userdata.uid);
-                    firebase.firestore().collection('Users').where('uid', '==', newContact).get()
+                    db.collection('Users').where('uid', '==', newContact).get()
                         .then((res) => {
-                            firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                            db.collection('Contacts').doc(res.docs[0].data().contact).update({
                                 otPendingList: ctt.otPendingList
                             })
                         })
@@ -148,20 +160,22 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const refuseInvite = ( inviteId: string ) => {
+        const db = firebase.firestore();
+
         // Remove waiting invite from list
         const cttFiltered = contacts.otPendingList.filter((value, index, arr) => { return value !== inviteId; });
-        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+        db.collection('Contacts').doc(userdata.contact).update({
             otPendingList: cttFiltered
         });
 
-        // Add to other contact list
-        firebase.firestore().collection('Contacts').where('uidUser', '==', inviteId).get()
+        // Remove from other contact list
+        db.collection('Contacts').where('uidUser', '==', inviteId).get()
             .then((res) => {
                 let ctt = res.docs[0].data() as Contact;
                 const cttFiltered = ctt.myPendingList.filter((value, index, arr) => { return value !== userdata.uid; });
-                firebase.firestore().collection('Users').where('uid', '==', inviteId).get()
+                db.collection('Users').where('uid', '==', inviteId).get()
                     .then((res) => {
-                        firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                        db.collection('Contacts').doc(res.docs[0].data().contact).update({
                             myPendingList: cttFiltered
                         })
                     })
@@ -169,20 +183,22 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const delPendingInvite = (inviteId: string) => {
+        const db = firebase.firestore();
+
         // Remove waiting invite from list
         const cttFiltered = contacts.myPendingList.filter((value, index, arr) => { return value !== inviteId; });
-        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+        db.collection('Contacts').doc(userdata.contact).update({
             myPendingList: cttFiltered
         });
 
         // Add to other contact list
-        firebase.firestore().collection('Contacts').where('uidUser', '==', inviteId).get()
+        db.collection('Contacts').where('uidUser', '==', inviteId).get()
             .then((res) => {
                 let ctt = res.docs[0].data() as Contact;
                 const cttFiltered = ctt.otPendingList.filter((value, index, arr) => { return value !== userdata.uid; });
-                firebase.firestore().collection('Users').where('uid', '==', inviteId).get()
+                db.collection('Users').where('uid', '==', inviteId).get()
                     .then((res) => {
-                        firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                        db.collection('Contacts').doc(res.docs[0].data().contact).update({
                             otPendingList: cttFiltered
                         })
                     })
@@ -190,35 +206,77 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const removeContact = (removeContact: string) => {
+        const db = firebase.firestore()
+
         const filtered = contacts.contactList.filter((value, index, arr) => { return value !== removeContact; });
-        firebase.firestore().collection('Contacts').doc(userdata.contact).update({
+        db.collection('Contacts').doc(userdata.contact).update({
             contactList: filtered
         });
 
-        firebase.firestore().collection('Contacts').where('uidUser', '==', removeContact).get()
+        db.collection('Contacts').where('uidUser', '==', removeContact).get()
                 .then((res) => {
                     let ctt = res.docs[0].data() as Contact;
                     const filtered = ctt.contactList.filter((value, index, arr) => { return value !== userdata.uid; });
-                    firebase.firestore().collection('Users').where('uid', '==', removeContact).get()
+                    db.collection('Users').where('uid', '==', removeContact).get()
                         .then((res) => {
-                            firebase.firestore().collection('Contacts').doc(res.docs[0].data().contact).update({
+                            db.collection('Contacts').doc(res.docs[0].data().contact).update({
                                 contactList: filtered
                             })
                         })
                 })
     }
 
+    const startConv = (receiverId: string, message: any) => {
+        firebase.firestore().collection("Conversations").add({
+            convId: "",
+            lastMessage: "",
+            messages: [],
+            users : [
+                userdata.uid,
+                receiverId
+            ],
+        }).then((res) => {
+            firebase.firestore().collection("Conversations").doc(res.id).update({
+                convId: res.id
+            });
+
+            sendMessage(res.id, message);
+        });
+    }
+
+    const sendMessage = (convId: string, message: any) => {
+        firebase.firestore().collection('Messages').add({
+            convId: convId,
+            message: message,
+            sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            senderId: userdata.uid
+        }).then((res) => {
+            const filtered = conversations.filter((value) => { return value.convId === convId; })[0];
+            const dividPath = res.path.split('/');
+            filtered.messages.push(res.path.split('/')[1]);
+            firebase.firestore().collection('Conversations').doc(convId).update({
+                lastMessage: dividPath[1],
+                messages: filtered.messages,
+            });
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     const initContext = async () => {
         const userData = await Storage.get({ key: 'userdata' });
         const contactList = await Storage.get({ key: 'contactList' });
+        const conversationList = await Storage.get({ key: 'conversations' });
 
         const storedUserData = userData.value ? JSON.parse(userData.value) : defaultUserData;
         const storedContactList = contactList.value ? JSON.parse(contactList.value) : defaultContact;
+        const storedConversationList = conversationList.value ? JSON.parse(conversationList.value) : [];
         
         didMountRef.current = false;
 
         setUserData(storedUserData);
         setContacts(storedContactList);
+        setConversations(storedConversationList);
     }
 
     return (
@@ -236,6 +294,9 @@ const AppContextProvider: React.FC = (props) => {
             refuseInvite,
             delPendingInvite,
             removeContact,
+
+            conversations,
+            sendMessage,
             
             user,
             authenticated: user !== null,

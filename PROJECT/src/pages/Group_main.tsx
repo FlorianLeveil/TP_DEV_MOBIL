@@ -17,11 +17,11 @@ import {
     IonTitle,
     IonToolbar
   } from '@ionic/react';
-  import React, { useState } from 'react';
+import React, { useState } from 'react';
   
 
   
-  const Group: React.FC = () => {
+const Group: React.FC = () => {
 	const [showModal, setShowModal] = useState(false);
     return (
       <IonPage>
@@ -79,30 +79,6 @@ import {
 									</IonLabel>
 									<IonButton color="warning">Modifier</IonButton>
 								</IonItem>
-
-								<IonItem>
-									<IonAvatar slot="start">
-									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-									</IonAvatar>
-									<IonLabel>
-										<h2>Florian</h2>
-										<p>30 membres</p>
-										<p>Créée le: 10/07/2020</p>
-									</IonLabel>
-									<IonButton color="warning">Modifier</IonButton>
-								</IonItem>
-
-								<IonItem>
-									<IonAvatar slot="start">
-									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-									</IonAvatar>
-									<IonLabel>
-										<h2>Florian</h2>
-										<p>30 membres</p>
-										<p>Créée le: 10/07/2020</p>
-									</IonLabel>
-									<IonButton color="warning">Modifier</IonButton>
-								</IonItem>
 							</IonList>
 						</IonCol>
 					</IonRow>
@@ -110,7 +86,7 @@ import {
 						<IonCol>
 							<IonList>
 								<IonListHeader>
-									Groupe auquel j'appartient
+									Groupe auxquels j'appartient
 								</IonListHeader>
 								<IonItem>
 									<IonAvatar slot="start">
@@ -123,29 +99,6 @@ import {
 									</IonLabel>
 									<IonButton color="danger">Quitter</IonButton>
 								</IonItem>
-								<IonItem>
-									<IonAvatar slot="start">
-									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-									</IonAvatar>
-									<IonLabel>
-										<h2>Groupe2</h2>
-										<p>13 membres</p>
-										<p>Membres depuis: 10/07/2018</p>
-									</IonLabel>
-									<IonButton color="danger">Quitter</IonButton>
-								</IonItem>
-								<IonItem>
-									<IonAvatar slot="start">
-									<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-									</IonAvatar>
-									<IonLabel>
-										<h2>Groupe3</h2>
-										<p>13 membres</p>
-										<p>Membres depuis: 10/07/2018</p>
-									</IonLabel>
-									<IonButton color="danger">Quitter</IonButton>
-								</IonItem>
-
 							</IonList>
 						</IonCol>
 					</IonRow>
@@ -153,7 +106,7 @@ import {
 		</IonContent>
 	</IonPage>
     );
-  };
+};
   
-  export default Group;
+export default Group;
   

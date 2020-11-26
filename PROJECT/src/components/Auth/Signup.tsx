@@ -5,7 +5,6 @@ import "firebase/firestore";
 import AppContext from "../../data/app-context";
 import { ROUTE_HOME, ROUTE_LOGIN } from "../../nav/Routes";
 import { IonAlert, IonButton, IonContent, IonDatetime, IonInput, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
-import { today } from "ionicons/icons";
 
 interface FormItems {
   username: string;
@@ -30,9 +29,6 @@ const SignUp = () => {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 
-
-  // const [picture, setPicture] = useState<Picture>();
-  // const defaultImg = ''
   const [values, setValues] = useState({
     username: "",
     name: "",

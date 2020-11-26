@@ -1,5 +1,5 @@
-import { IonButton, IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonIcon, IonPage, IonRow } from '@ionic/react';
-import { add, arrowForwardCircle } from 'ionicons/icons';
+import { IonCol, IonContent, IonFab, IonFabButton, IonGrid, IonIcon, IonPage, IonRow } from '@ionic/react';
+import { add } from 'ionicons/icons';
 import React, { useState } from 'react';
 import ContactAddUserModal from '../components/contactComponents/ContactAddUserModal';
 import ContactList from '../components/contactComponents/ContactList';

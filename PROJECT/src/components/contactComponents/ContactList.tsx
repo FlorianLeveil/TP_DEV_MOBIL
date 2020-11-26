@@ -1,12 +1,9 @@
-import { IonAvatar, IonButton, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonLoading, IonTitle } from '@ionic/react'
-import firebase from 'firebase';
-import 'firebase/firebase';
+import { IonAvatar, IonButton, IonItem, IonLabel, IonList, IonListHeader, IonLoading } from '@ionic/react'
+import firebase from '../../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import AppContext from '../../data/app-context';
 import ContactAddUserModal from './ContactAddUserModal';
-
-import { addOutline } from 'ionicons/icons';
 
 const ContactList: React.FC = () => {
     const appCtx = useContext(AppContext);

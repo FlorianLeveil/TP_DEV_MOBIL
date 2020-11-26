@@ -1,5 +1,5 @@
-import { IonAvatar, IonButton, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonTitle } from '@ionic/react'
-import firebase from 'firebase';
+import { IonAvatar, IonButton, IonIcon, IonItem, IonLabel, IonList, IonListHeader } from '@ionic/react'
+import firebase from '../../firebase';
 import 'firebase/firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import defaultProfile from '../../assets/defaultProfile.jpg';

@@ -1,48 +1,109 @@
-import { IonAvatar, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonNote } from '@ionic/react'
-import React from 'react';
+import { IonAvatar, IonItem, IonItemSliding, IonLabel, IonList, IonLoading, IonNote } from '@ionic/react'
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import defaultProfile from '../assets/defaultProfile.jpg';
+import AppContext from '../data/app-context';
+import firebase from '../firebase';
+import { fromDate } from '../helpers/dateHelper';
 
 import { ROUTE_CONVERSATION } from '../nav/Routes';
 
-
 const HomeConversation: React.FC = () => {
-    let contacts = [{user: 'user1', last_message: 'Toto1',date_last_message:'10-10-2020-15:60:30', new_message: 0},
-                    {user: 'user2', last_message: 'Toto2',date_last_message:'10-10-2020-15:60:30', new_message: 5},
-                    {user: 'user3', last_message: 'Toto3',date_last_message:'10-10-2020-15:60:30', new_message: 0},
-                    {user: 'user4', last_message: 'Toto4',date_last_message:'10-10-2020-15:60:30', new_message: 10},
-                    {user: 'user5', last_message: 'Toto5',date_last_message:'10-10-2020-15:60:30', new_message: 0}];
+    const appCtx = useContext(AppContext);
+    const history = useHistory();
+    const db = firebase.firestore();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [users, setUsers] = useState<firebase.firestore.DocumentData[]>([]);
+    const [messages, setMessages] = useState<firebase.firestore.DocumentData[]>([]);
 
-    contacts.sort(function (a, b) {
-        return b.new_message - a.new_message;
-    });
+    useEffect(() => {
+        setMessages([]);
+        
+        appCtx.conversations.map(async (conv) => {
+            setLoading(true);
+            await db.collection('Users').doc(conv.users.filter((value) => { return value !== appCtx.user?.uid })[0]).get()
+                .then((res) => {
+                    if (!users.includes(res)) {
+                        setUsers((prevState) => {
+                            prevState.push(res);
+                            return prevState;
+                        })
+                    }
+                })
+
+            await db.collection('Messages').doc(conv.lastMessage).get()
+                .then((res) => {
+                    if (!users.includes(res)) {
+                        setMessages((prevState) => {
+                            prevState.push(res);
+                            return prevState;
+                        })
+                    }
+                })
+
+            if (appCtx.conversations.indexOf(conv) === appCtx.conversations.length-1) {
+                setLoading(false);
+            }
+        })
+    //eslint-disable-next-line
+    }, [appCtx.conversations])
+
+    const handleRoute = (convId: string) => {
+        history.push(ROUTE_CONVERSATION + convId)
+    }
+
+    const not = () => {
+        return(
+            ""
+        )
+    }
+
+    const convs = () => {
+        if ( users.length === 0 || messages.length === 0 ) {
+            return (
+                <IonItem>
+                    <IonLabel>
+                        Let's start writing a good story :)
+                    </IonLabel>
+                </IonItem>
+            )
+        } else {
+            return appCtx.conversations.map((conv, index) => {
+                let user = users[index]
+                let msg = messages[index]
+                return (
+                    <IonItemSliding key={conv.convId} onClick={() => handleRoute(conv.convId)}>
+                        <IonItem routerLink={ROUTE_CONVERSATION}>
+                            <IonAvatar slot="start">
+                            <img alt='Profile' src={user.data()?.picture ? user.data()?.picture : defaultProfile} />
+                            </IonAvatar>
+                            <IonLabel>
+                                <h2>{user.data().username}</h2>
+                                <p>{msg.data()?.message}</p>
+                            </IonLabel>
+                            <IonLabel>
+                                <em>{ fromDate(msg.data().sendedAt.seconds) }</em>
+                            </IonLabel>
+                            <IonNote slot="end" color="primary">{index}</IonNote>
+                        </IonItem>
+                    </IonItemSliding>
+                )
+            })
+        }
+    }
 
     return (
-        <IonList>
-            {
-                contacts.map( (name) => {
-                    return (
-                        <IonItemSliding key={name.user.toString()}>
-                            <IonItem routerLink={ROUTE_CONVERSATION}>
-                                <IonAvatar slot="start">
-                                <img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-                                </IonAvatar>
-                                <IonLabel>
-                                    <h2>{name.user}</h2>
-                                    <p>{name.date_last_message}</p>
-                                    <p>{name.last_message}</p>
-                                </IonLabel>
-                            <IonNote slot="end" color="primary">{name.new_message}</IonNote>
-                            </IonItem>
-                            <IonItemOptions side="start">
-                                <IonItemOption color="primary">Mark Unread</IonItemOption >
-                            </IonItemOptions>
-                            <IonItemOptions side="end">
-                                <IonItemOption color="danger">Delete</IonItemOption >
-                            </IonItemOptions>
-                        </IonItemSliding>
-                    )
-                })
-            }
-        </IonList>
+        <>
+            <IonLoading
+                isOpen={loading}
+                message="Loading your conversations"
+            />
+            <IonList>
+                {
+                    loading ? not() : convs()
+                }
+            </IonList>
+        </>
     )
 }
 

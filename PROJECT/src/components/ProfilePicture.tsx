@@ -6,8 +6,7 @@ import { pencilOutline } from 'ionicons/icons';
 import { CameraResultType, CameraSource, Plugins } from '@capacitor/core';
 import AppContext from '../data/app-context';
 
-import firebase from '../firebase'
-import 'firebase/firebase';
+import firebase from '../firebase';
 
 const { Camera } = Plugins;
 
@@ -44,6 +43,7 @@ const ProfilePicture: React.FC = () => {
 
         const uploadTask = await imageRef.putString(photo.base64String, 'base64');
 
+        console.log(uploadTask)
         updatePicture();
         
         setUploading(false);

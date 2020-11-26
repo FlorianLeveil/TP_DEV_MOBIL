@@ -1,15 +1,13 @@
 import React, { Suspense, useContext } from 'react';
-import { IonButton, IonCol, IonContent, IonGrid, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonSpinner, IonTitle } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonGrid, IonIcon, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonSpinner } from '@ionic/react';
 import { exitOutline } from 'ionicons/icons';
 
 import './Profile.scss';
 import AppContext from '../data/app-context';
 import UserInformationItem from '../components/UserInformation';
-import ResponsiveContent from '../components/ResponsiveContent';
 
 import Logout from '../components/Auth/Logout';
 import ProfilePicture from '../components/ProfilePicture';
-import UserUtilisationInformation from '../components/UserUtilisationInformation';
 
 const Profile: React.FC = () => {
   const appCtx = useContext(AppContext);
@@ -39,7 +37,7 @@ const Profile: React.FC = () => {
               </IonList>
             </IonCol>
           </IonRow>
-          <IonRow class="ion-justify-content-center">
+          {/* <IonRow class="ion-justify-content-center">
             <IonCol size="12" sizeLg='7'>
               <IonList mode="ios">
                 <IonListHeader>
@@ -53,7 +51,7 @@ const Profile: React.FC = () => {
                 <UserUtilisationInformation userdata={userdata.description} field='description' friendlyName='Description' unit='' type='textarea' />
               </IonList>
             </IonCol>
-          </IonRow>
+          </IonRow> */}
           <IonRow class="ion-justify-content-center">
             <IonCol size="12" sizeLg='7'>
                 <Logout>
