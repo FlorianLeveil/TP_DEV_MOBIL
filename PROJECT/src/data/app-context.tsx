@@ -90,6 +90,7 @@ interface AppContext {
     removeContact: (contactId: string) => void,
 
     conversations: Conversation[],
+    startConv: (receiverId: string, message: any) => void,
     sendMessage: (convId: string, message: any) => void,
 
     user: firebase.User | null,

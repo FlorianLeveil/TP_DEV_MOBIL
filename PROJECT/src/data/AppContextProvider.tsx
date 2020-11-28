@@ -296,6 +296,7 @@ const AppContextProvider: React.FC = (props) => {
             removeContact,
 
             conversations,
+            startConv,
             sendMessage,
             
             user,
