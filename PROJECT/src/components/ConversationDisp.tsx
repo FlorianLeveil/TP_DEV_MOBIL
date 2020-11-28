@@ -18,8 +18,7 @@ const ConversationDisp: React.FC = () => {
 	useEffect(() => {
 		db.collection("Conversations").doc(id).get()
 			.then( async (res) => {
-
-				// CONSOLE LOG DATA
+				// SET CONV DATA
 				setConv(res.data() as Conversation);
 
 				// SETUP OTHER USER DATA
@@ -28,44 +27,20 @@ const ConversationDisp: React.FC = () => {
 						setAlterUser(res.data() as UserData);
 					})
 
-                // // LOAD MESSAGES
-                // await db.collection("Messages").where("convId", "==", conv.convId).orderBy("sendedAt", "asc")
-                //     .onSnapshot(function(querySnapshot) {
-                //         querySnapshot.forEach(function(doc) {
-                //             if (messages.includes(doc.data() as Message)) {
-                //                 console.log("Already in");
-                //             } else {
-                //                 setMessages((prevState) => {
-                //                     prevState.push(doc.data() as Message);
-                //                     return prevState;
-                //                 });
-                //                 console.log("Adding message")
-                //             }
-                            
-                //         });
-                //     });
-				await db.collection("Messages").where("convId", "==", conv.convId).orderBy("sendedAt", "asc").get()
-					.then((docs) => {
-						docs.docs.forEach((msg) => {
-							setMessages((prevState) => {
-								prevState.push(msg.data() as Message)
-								return prevState;
-							})
-						})
-					})
+				db.collection('Messages').where("convId", "==", conv.convId).orderBy("sendedAt", "asc")
+                    .onSnapshot(function (querySnapshot) {
+                        let listMessages: Message[] = [];
+                        querySnapshot.forEach(function (doc) {
+                            listMessages.push(doc.data() as Message);
+                        });
+                        setMessages(listMessages);
+                    });
 
 				setLoading(false);
-			}).catch((err) => {
-				console.log(err)
 			})
 
 	//eslint-disable-next-line
-	}, [conv.convId])
-
-	// useEffect(() => {
-    //     setLoading(true);
-	// 	setLoading(false);
-	// }, [conv.messages])
+	}, [])
 
 	const loadMessages = () => {
 		if ( messages.length === 0 ) {
@@ -77,7 +52,7 @@ const ConversationDisp: React.FC = () => {
 		} else {
 			return messages.map((msg: Message, index) => {
 				return (
-                    <IonItem key={msg.sendedAt.toString()}>
+                    <IonItem key={index}>
                         <IonLabel slot={msg.senderId === appCtx.userdata.uid ? 'end' : 'start'} className={msg.senderId === appCtx.userdata.uid ? 'ion-text-right' : 'ion-text-left'} color={msg.senderId === appCtx.userdata.uid ? 'primary' : 'black'}>
                             {msg.message}
                         </IonLabel>

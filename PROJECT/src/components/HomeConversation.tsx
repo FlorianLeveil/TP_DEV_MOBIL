@@ -46,7 +46,7 @@ const HomeConversation: React.FC = () => {
             }
         })
     //eslint-disable-next-line
-    }, [appCtx.conversations])
+    }, [])
 
     const handleRoute = (convId: string) => {
         history.push(ROUTE_CONVERSATION + convId)

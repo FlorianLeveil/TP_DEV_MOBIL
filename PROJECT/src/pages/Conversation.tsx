@@ -29,6 +29,7 @@ const ConversationComp: React.FC = () => {
 		} catch (e) {
 			console.log(e);
 		}
+	//eslint-disable-next-line
 	}, []);
 
 	if (showAlert) {
