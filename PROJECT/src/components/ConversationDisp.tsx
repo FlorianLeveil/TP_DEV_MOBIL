@@ -16,6 +16,7 @@ const ConversationDisp: React.FC = () => {
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
+		setLoading(true);
 		db.collection("Conversations").doc(id).get()
 			.then( async (res) => {
 				// SET CONV DATA
@@ -35,10 +36,9 @@ const ConversationDisp: React.FC = () => {
                         });
                         setMessages(listMessages);
                     });
-
-				setLoading(false);
 			})
 
+		setLoading(false);
 	//eslint-disable-next-line
 	}, [])
 
@@ -79,7 +79,7 @@ const ConversationDisp: React.FC = () => {
 				</IonTitle>
 			</IonHeader>
 			<IonContent>
-				<IonList className="ion-no-border ion-margin">
+				<IonList className="ion-no-border ion-margin reorder-list-active">
 					{
 						loadMessages()
 					}

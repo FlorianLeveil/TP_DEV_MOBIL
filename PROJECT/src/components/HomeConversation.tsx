@@ -1,4 +1,4 @@
-import { IonAvatar, IonItem, IonItemSliding, IonLabel, IonList, IonLoading, IonNote } from '@ionic/react'
+import { IonAvatar, IonItem, IonItemSliding, IonLabel, IonList, IonNote } from '@ionic/react'
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import defaultProfile from '../assets/defaultProfile.jpg';
@@ -12,50 +12,38 @@ const HomeConversation: React.FC = () => {
     const appCtx = useContext(AppContext);
     const history = useHistory();
     const db = firebase.firestore();
-    const [loading, setLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<firebase.firestore.DocumentData[]>([]);
     const [messages, setMessages] = useState<firebase.firestore.DocumentData[]>([]);
 
     useEffect(() => {
-        setMessages([]);
+        db.collection("Conversations").where("users", "array-contains", appCtx.userdata.uid)
+            .onSnapshot((docs) => {
+                let listUsers: firebase.firestore.DocumentData[] = [];
+                let listMessages: firebase.firestore.DocumentData[] = [];
+                docs.forEach((doc) => {
+                    db.collection('Users').doc(doc.data().users.filter((value: string) => { return value !== appCtx.user?.uid })[0]).get()
+                        .then((res) => {
+                            listUsers.push(res);
+                        });
         
-        appCtx.conversations.map(async (conv) => {
-            setLoading(true);
-            await db.collection('Users').doc(conv.users.filter((value) => { return value !== appCtx.user?.uid })[0]).get()
-                .then((res) => {
-                    if (!users.includes(res)) {
-                        setUsers((prevState) => {
-                            prevState.push(res);
-                            return prevState;
-                        })
-                    }
+                    db.collection('Messages').doc(doc.data().lastMessage)
+                        .onSnapshot((res) => {
+                            listMessages.push(res)
+                        });
+
+                    console.log("[IN FOREACH] Gets here for : ", listUsers, listMessages)
                 })
 
-            await db.collection('Messages').doc(conv.lastMessage).get()
-                .then((res) => {
-                    if (!users.includes(res)) {
-                        setMessages((prevState) => {
-                            prevState.push(res);
-                            return prevState;
-                        })
-                    }
-                })
-
-            if (appCtx.conversations.indexOf(conv) === appCtx.conversations.length-1) {
-                setLoading(false);
-            }
-        })
+                setUsers(listUsers);
+                setMessages(listMessages);
+                
+                console.log("[OUT FOREACH IN SNAP]Gets here for : ", users, messages);
+            })
     //eslint-disable-next-line
     }, [])
 
     const handleRoute = (convId: string) => {
         history.push(ROUTE_CONVERSATION + convId)
-    }
-
-    const not = () => {
-        return(
-            ""
-        )
     }
 
     const convs = () => {
@@ -72,7 +60,7 @@ const HomeConversation: React.FC = () => {
                 let user = users[index]
                 let msg = messages[index]
                 return (
-                    <IonItemSliding key={conv.convId} onClick={() => handleRoute(conv.convId)}>
+                    <IonItemSliding key={index} onClick={() => handleRoute(conv.convId)}>
                         <IonItem routerLink={ROUTE_CONVERSATION}>
                             <IonAvatar slot="start">
                             <img alt='Profile' src={user.data()?.picture ? user.data()?.picture : defaultProfile} />
@@ -94,13 +82,13 @@ const HomeConversation: React.FC = () => {
 
     return (
         <>
-            <IonLoading
+            {/* <IonLoading
                 isOpen={loading}
                 message="Loading your conversations"
-            />
+            /> */}
             <IonList>
                 {
-                    loading ? not() : convs()
+                    convs()
                 }
             </IonList>
         </>

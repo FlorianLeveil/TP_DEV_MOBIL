@@ -27,13 +27,12 @@ const AppContextProvider: React.FC = (props) => {
                     .onSnapshot(function (doc) {
                         const updatedProfile = doc.data() as UserData;
                         setUserData(updatedProfile)
-                        if ( updatedProfile.contact !== '' ) {
-                            db.collection("Contacts").doc(updatedProfile.contact)
-                            .onSnapshot(function (doc) {
-                                const updatedContact = doc.data() as Contact;
-                                setContacts(updatedContact)
-                            });
-                        }
+                    });
+
+                db.collection("Contacts").where("uidUser", "==", firebaseUser.uid)
+                    .onSnapshot(function (doc) {
+                        const updatedContact = doc.docs[0].data() as Contact;
+                        setContacts(updatedContact)
                     });
 
                 db.collection("Conversations").where("users", "array-contains", firebaseUser.uid)
