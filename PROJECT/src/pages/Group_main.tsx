@@ -4,8 +4,11 @@ import {
 	IonButtons,
     IonCol,
     IonContent,
+	IonFab,
+	IonFabButton,
     IonGrid,
     IonHeader,
+	IonIcon,
 	IonInput,
 	IonItem,
 	IonLabel,
@@ -17,7 +20,9 @@ import {
     IonTitle,
     IonToolbar
   } from '@ionic/react';
+import { add } from 'ionicons/icons';
 import React, { useState } from 'react';
+import GroupAddGroupModal from '../components/groupComponents/GroupAddGroupModal';
   
 
   
@@ -26,42 +31,13 @@ const Group: React.FC = () => {
     return (
       <IonPage>
           	<IonContent>
-			  <IonModal isOpen={showModal} cssClass='my-custom-class'>
-						<IonHeader translucent>
-							<IonToolbar>
-								<IonTitle>Créer un nouveau groupe</IonTitle>
-								<IonButtons slot="end">
-									<IonButton onClick={() => setShowModal(false)}>Close</IonButton>
-								</IonButtons>
-							</IonToolbar>
-						</IonHeader>
-						<IonContent fullscreen>
-							<IonGrid>
-								<IonRow>
-									<IonCol>
-										<IonAvatar>
-											<img alt='Profile' src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-										</IonAvatar>
-										<IonList>
-											<IonListHeader>
-												Nom du groupe
-											</IonListHeader>
-											<IonItem>
-												<IonInput placeholder="Nom du groupe"></IonInput>
-											</IonItem>
-										</IonList>
-									</IonCol>
-								</IonRow>
-							</IonGrid>
-						
-						</IonContent>
-					</IonModal>
+				<IonFab vertical="bottom" horizontal="end" slot="fixed">
+						<IonFabButton onClick={() => setShowModal(true)}>
+							<IonIcon icon={add} />
+						</IonFabButton>
+				</IonFab>
+				<GroupAddGroupModal showModal={showModal} setShowModal={setShowModal}/>
           	  	<IonGrid>
-					<IonRow>
-						<IonCol>
-							<IonButton onClick={() => setShowModal(true)} expand="block" color="success">Créer un nouveau groupe</IonButton>
-						</IonCol>
-					</IonRow>
 					<IonRow>
 						<IonCol>
 							<IonList>
