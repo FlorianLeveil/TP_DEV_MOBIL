@@ -1,24 +1,18 @@
 import {
 	IonAvatar,
 	IonButton,
-	IonButtons,
     IonCol,
     IonContent,
 	IonFab,
 	IonFabButton,
     IonGrid,
-    IonHeader,
 	IonIcon,
-	IonInput,
 	IonItem,
 	IonLabel,
 	IonList,
 	IonListHeader,
-	IonModal,
     IonPage,
-    IonRow,
-    IonTitle,
-    IonToolbar
+    IonRow
   } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import React, { useState } from 'react';

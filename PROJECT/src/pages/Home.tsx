@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './Home.css';
 import HomeConversation from '../components/HomeConversation';
 import { add } from 'ionicons/icons';
-import NewMessageModal from '../components/NewMessageModal';
+import StartConversation from '../components/StartConversation';
 
 
 const Home: React.FC = () => {
@@ -29,8 +29,7 @@ const Home: React.FC = () => {
 							<IonIcon icon={add} />
           				</IonFabButton>
         			</IonFab>
-					<NewMessageModal showModal={showModal} setShowModal={setShowModal}/>
-
+					<StartConversation showModal={showModal} setShowModal={setShowModal}/>
 				</IonContent>
 			</IonPage>
 		</>

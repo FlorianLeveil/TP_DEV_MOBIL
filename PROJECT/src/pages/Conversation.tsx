@@ -1,12 +1,10 @@
-import { IonAlert, IonFab, IonFabButton, IonIcon, IonPage } from '@ionic/react';
+import { IonAlert, IonPage } from '@ionic/react';
 import firebase from '../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import AppContext from '../data/app-context';
 import ConversationDisp from '../components/ConversationDisp';
 import { ROUTE_HOME } from '../nav/Routes';
-import StartConversation from '../components/StartConversation';
-import { add } from 'ionicons/icons';
 
 const ConversationComp: React.FC = () => {
 	const appCtx = useContext(AppContext);
@@ -14,7 +12,6 @@ const ConversationComp: React.FC = () => {
 	const { id } = useParams<{id: string}>();
 	const db = firebase.firestore();
 	const [showAlert, setShowAlert] = useState<boolean>(false);
-	const [showModal, setShowModal] = useState<boolean>(false);
 	const [alertText, setAlertText] = useState<string>("");
 
 	useEffect(() => {
@@ -63,12 +60,6 @@ const ConversationComp: React.FC = () => {
 	} else {
 		return (
 			<IonPage>
-				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-          			<IonFabButton onClick={() => setShowModal(true)}>
-            			<IonIcon icon={add} />
-          			</IonFabButton>
-        		</IonFab>
-				<StartConversation showModal={showModal} setShowModal={setShowModal}/>
 				<ConversationDisp />
 			</IonPage>
 		)

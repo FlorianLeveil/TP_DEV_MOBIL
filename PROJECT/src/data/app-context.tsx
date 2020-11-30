@@ -5,7 +5,7 @@ import Contact from '../pages/Contact';
 export interface Message {
     convId: string,
     message: any,
-    sendedAt: Date,
+    sendedAt: firebase.firestore.Timestamp,
     senderId: string
 }
 
@@ -90,8 +90,8 @@ interface AppContext {
     removeContact: (contactId: string) => void,
 
     conversations: Conversation[],
-    startConv: (receiverId: string, message: any) => void,
     sendMessage: (convId: string, message: any) => void,
+    startConv: (receiverId: string, message: any) => void,
 
     user: firebase.User | null,
     authenticated: boolean;
@@ -115,8 +115,8 @@ const AppContext = React.createContext<AppContext>({
     removeContact: () => { },
     
     conversations: [],
-    startConv: () => { },
     sendMessage: () => { },
+    startConv: () => { },
 
     user: null,
     authenticated: false,

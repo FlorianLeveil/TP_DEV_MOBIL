@@ -225,37 +225,51 @@ const AppContextProvider: React.FC = (props) => {
                 })
     }
 
-    const startConv = (receiverId: string, message: any) => {
-        firebase.firestore().collection("Conversations").add({
-            convId: "",
-            lastMessage: "",
+    const startConv = async (receiverId: string, message: any) => {
+        const db = firebase.firestore();
+        db.collection("Conversations").add({
+            convId:"",
+            lastMessage: {},
             messages: [],
-            users : [
+            users: [
                 userdata.uid,
                 receiverId
             ],
-        }).then((res) => {
-            firebase.firestore().collection("Conversations").doc(res.id).update({
-                convId: res.id
+        }).then((convRes) => {
+            convRes.update({
+                convId: convRes.id
             });
 
-            sendMessage(res.id, message);
-        });
+            db.collection("Messages").add({
+                convId: convRes.id,
+                message: message,
+                sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                senderId: userdata.uid
+            }).then((msgRes) => {
+                db.collection("Messages").doc(msgRes.id).get().then((res) => {
+                    db.collection("Conversations").doc(convRes.id).update({
+                        lastMessage: res.data(),
+                        messages: [res.id]
+                    })
+                })
+            })
+        })
     }
 
-    const sendMessage = (convId: string, message: any) => {
-        firebase.firestore().collection('Messages').add({
+    const sendMessage = async (convId: string, message: any) => {
+        firebase.firestore().collection("Messages").add({
             convId: convId,
             message: message,
             sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
             senderId: userdata.uid
         }).then((res) => {
             const filtered = conversations.filter((value) => { return value.convId === convId; })[0];
-            const dividPath = res.path.split('/');
-            filtered.messages.push(res.path.split('/')[1]);
-            firebase.firestore().collection('Conversations').doc(convId).update({
-                lastMessage: dividPath[1],
-                messages: filtered.messages,
+            filtered.messages.push(res.id);
+            firebase.firestore().collection("Messages").doc(res.id).get().then((res2) => {
+                firebase.firestore().collection("Conversations").doc(convId).update({
+                    lastMessage: res2.data(),
+                    messages: filtered.messages
+                });
             });
         }).catch((err) => {
             console.log(err)
@@ -295,8 +309,8 @@ const AppContextProvider: React.FC = (props) => {
             removeContact,
 
             conversations,
-            startConv,
             sendMessage,
+            startConv,
             
             user,
             authenticated: user !== null,
