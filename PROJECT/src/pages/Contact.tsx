@@ -19,16 +19,18 @@ const Contact: React.FC = () => {
         		</IonFab>
 				<ContactAddUserModal showModal={showModal} setShowModal={setShowModal}/>
 				<IonGrid>
-					<IonRow>
-						<IonCol size-sm>
+					<IonRow class="ion-justify-content-center">
+						<IonCol size="12" sizeLg='7'>
 							<OtPendingContactList />
 						</IonCol>
-						<IonCol size-sm>
+					</IonRow>
+					<IonRow class="ion-justify-content-center">
+						<IonCol size="12" sizeLg='7'>
 							<MyPendingContactList />
 						</IonCol>
 					</IonRow>
-					<IonRow>
-						<IonCol size="12">
+					<IonRow class="ion-justify-content-center">
+						<IonCol size="12" sizeLg='7'>
 							<ContactList />
 						</IonCol>
 					</IonRow>
