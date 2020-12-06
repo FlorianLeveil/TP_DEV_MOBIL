@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import AppContext, { Contact, Conversation, defaultContact, defaultUserData, Group, UserData } from './app-context';
 import { Plugins } from '@capacitor/core';
 import firebase from "../firebase";
+import { useTranslation } from 'react-i18next';
 
 const { Storage } = Plugins;
 
@@ -16,6 +17,7 @@ const AppContextProvider: React.FC = (props) => {
     const [loadingAuthState, setLoadingAuthState] = useState(true);
 
     const didMountRef = useRef(false);
+    const { i18n } = useTranslation();
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user: any) => {
@@ -593,6 +595,13 @@ const AppContextProvider: React.FC = (props) => {
         setGroups(storedGroupList);
     }
 
+    const updateLanguage = (lng: string) => {
+        i18n.changeLanguage(lng)
+        let newProfile = { ...userdata };
+        newProfile.lng = lng;
+        updateUserData(newProfile);
+    }
+
     return (
         <AppContext.Provider value={{
             initContext,
@@ -626,7 +635,10 @@ const AppContextProvider: React.FC = (props) => {
             user,
             authenticated: user !== null,
             setUser,
-            loadingAuthState
+            loadingAuthState,
+
+            updateLanguage
+
         }}>
             {props.children}
         </AppContext.Provider>

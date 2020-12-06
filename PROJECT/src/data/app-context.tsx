@@ -34,6 +34,7 @@ export interface UserData {
     phone: string,
     description: string,
     uid: string,
+    lng?: string
 }
 
 export const defaultUserData: UserData = {
@@ -47,6 +48,7 @@ export const defaultUserData: UserData = {
     birthdate: 'IonLabel',
     description: 'default',
     uid: 'default',
+    
 }
 
 export interface Contact {
@@ -124,6 +126,8 @@ interface AppContext {
     authenticated: boolean;
     setUser: any;
     loadingAuthState: boolean;
+
+    updateLanguage: (lng: string) => void
 }
 
 const AppContext = React.createContext<AppContext>({
@@ -159,6 +163,8 @@ const AppContext = React.createContext<AppContext>({
     authenticated: false,
     setUser: () => {},
     loadingAuthState: false,
+
+    updateLanguage: () => { }
 });
 
 export default AppContext

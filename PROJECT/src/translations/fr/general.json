@@ -1,0 +1,22 @@
+{
+    "Conv" : {
+        "noResult" : "Aucun résultats",
+        "contactSearch" : "Recherche de contact",
+        "return" : "Retour",
+        "enterMessage" : "Message Text",
+        "letsStart" : "Écrivez votre histoire :)"
+    },
+    "Contact" : {
+        "noResult" :"Aucun résultats",
+        "add" : "Ajouter",
+        "contactSearch" : "Recherche de Contact",
+        "searchBar" : "RECHERCHE",
+        "return" : "RETOUR",
+        "contactList" : "Liste des contact(s)",
+        "noContact" : "Pas encore de contact",
+        "noRequest" : "Pas de demande(s) pour le moment",
+        "requestSent" : "Demande(s) de contact envoyée(s)",
+        "requestReceived" : "Demande(s) de Contact(s)"
+    },
+    "loading" : "Veuillez patienter..."
+}

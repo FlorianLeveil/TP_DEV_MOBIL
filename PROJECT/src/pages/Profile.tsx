@@ -9,9 +9,13 @@ import UserInformationItem from '../components/UserInformation';
 import Logout from '../components/Auth/Logout';
 import ProfilePicture from '../components/ProfilePicture';
 
+import { useTranslation } from 'react-i18next';
+import SelectLanguage from '../components/SelectLanguage';
+
 const Profile: React.FC = () => {
   const appCtx = useContext(AppContext);
   const userdata = appCtx.userdata;
+  const { t } = useTranslation('profile');
 
   return (
     <IonPage id="User">
@@ -27,13 +31,14 @@ const Profile: React.FC = () => {
               <IonList mode="ios">
                 <IonListHeader>
                   <IonLabel>
-                    Ton Profile
+                  {t('your-profile')}
                   </IonLabel>
                 </IonListHeader>
-                <UserInformationItem userdata={userdata.username} field='username' friendlyName='Pseudo' unit='' type='text' />
-                <UserInformationItem userdata={userdata.name} field='name' friendlyName='Name' unit='' type='text' />
-                <UserInformationItem userdata={userdata.lastname} field='lastname' friendlyName='Lastname' unit='' type='text' />
-                <UserInformationItem userdata={userdata.description} field='description' friendlyName='Description' unit='' type='textarea' />
+                <UserInformationItem userdata={userdata.username} field='username' friendlyName={t('pseudo')} unit='' type='text' />
+                <UserInformationItem userdata={userdata.name} field='name' friendlyName={t('name')} unit='' type='text' />
+                <UserInformationItem userdata={userdata.lastname} field='lastname' friendlyName={t('lastName')} unit='' type='text' />
+                <UserInformationItem userdata={userdata.description} field='description' friendlyName={t('description')} unit='' type='textarea' />
+                <SelectLanguage />
               </IonList>
             </IonCol>
           </IonRow>
@@ -56,7 +61,7 @@ const Profile: React.FC = () => {
             <IonCol size="12" sizeLg='7'>
                 <Logout>
                   <IonButton expand="full" color="danger">
-                    <IonLabel>Logout</IonLabel>
+                    <IonLabel>{t('logout')}</IonLabel>
                     <IonIcon slot='end' icon={ exitOutline }/>
                   </IonButton>
                 </Logout>

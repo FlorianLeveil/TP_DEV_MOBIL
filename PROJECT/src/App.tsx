@@ -29,6 +29,9 @@ import Nav from './nav/Nav';
 import AppContext from './data/app-context';
 import GroupConv from './components/groupComponents/GroupConv';
 
+/* Import Traslation */
+import './translations/i18n';
+
 const App: React.FC = () => {
 
   const appCtx = useContext(AppContext);

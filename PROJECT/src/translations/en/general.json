@@ -1,0 +1,22 @@
+{
+    "Conv" : {
+        "noResult" : "No result",
+        "contactSearch" : "Contact Search",
+        "return" : "Return",
+        "enterMessage" : "Enter a Gentle Message",
+        "letsStart" : "Let's start writing a good story :)"
+    },
+    "Contact" : {
+        "noResult" :"No Result",
+        "add" : "Add",
+        "contactSearch" : "Contact Search",
+        "searchBar" : "SEARCH",
+        "return" : "RETURN",
+        "contactList" : "Contact List",
+        "noContact" : "No contact",
+        "noRequest" : "No request for the moment",
+        "requestSent" : "Contact Request Sent",
+        "requestReceived" : "Contact Request"
+    },
+    "loading" : "Please wait ..."
+}
