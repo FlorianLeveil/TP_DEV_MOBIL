@@ -20,13 +20,13 @@ const GroupsListing: React.FC = () => {
 					</IonFab>
 					<GroupAddGroupModal showModal={showModal} setShowModal={setShowModal}/>
 					<IonGrid>
-						<IonRow>
-							<IonCol>
+						<IonRow class="ion-justify-content-center">
+							<IonCol size="12" sizeLg='7'>
 								<MyGroupList />
 							</IonCol>
 						</IonRow>
-						<IonRow>
-							<IonCol>
+						<IonRow class="ion-justify-content-center">
+							<IonCol size="12" sizeLg='7'>
 								<OtGroupList />
 							</IonCol>
 						</IonRow>

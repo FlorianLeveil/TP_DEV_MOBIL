@@ -1,10 +1,11 @@
-import { IonItem, IonItemSliding, IonLabel, IonList, IonListHeader, IonTitle } from '@ionic/react'
+import { IonAvatar, IonButton, IonItem, IonItemSliding, IonLabel, IonList, IonListHeader, IonTitle } from '@ionic/react'
 import firebase from '../../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Group } from '../../data/app-context';
 import { ROUTE_GROUP } from '../../nav/Routes';
-import { fromDate } from '../../helpers/dateHelper';
 import { useHistory } from 'react-router';
+import defaultProfile from '../../assets/defaultProfile.jpg';
+
 
 const OtGroupList: React.FC = () => {
 	const appCtx = useContext(AppContext);
@@ -43,19 +44,18 @@ const OtGroupList: React.FC = () => {
 		} else {
 			return otGroups.map((grp, index) => {
                 return (
-                    <IonItemSliding key={index} onClick={() => handleClick(grp.groupId)}>
-                        <IonItem routerLink={ROUTE_GROUP}>
-                            <IonLabel>{grp.groupName}</IonLabel>
+                        <IonItem key={index}>
+                            <IonAvatar slot="start">
+                                <img alt='Profile' src={defaultProfile} />
+                            </IonAvatar>
                             <IonLabel>
-                                {grp.users.length} participants
+                                <h2>{grp.groupName}</h2>
+                                <p>{grp.users.length} participants</p>
                             </IonLabel>
-                            <IonLabel>
-                                <em>
-                                    {fromDate(grp.lastMessage.sendedAt.seconds)}
-                                </em>
-                            </IonLabel>
+                            <IonButton color="danger" size="default" onClick={() => {
+                                // appCtx.removeGroup(grp.groupId)
+                            }}>Quitter</IonButton>
                         </IonItem>
-                    </IonItemSliding>
                 )
             })
 		}
@@ -63,9 +63,9 @@ const OtGroupList: React.FC = () => {
 
     return (
         <IonList>
-            <IonListHeader>
-                <IonTitle>Groupes : </IonTitle>
-            </IonListHeader>
+                <IonListHeader >
+                    <IonLabel>Liste des Groupe(s)</IonLabel>
+                </IonListHeader>
             {
                 fillOtList()
             }

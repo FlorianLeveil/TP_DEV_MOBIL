@@ -1,9 +1,9 @@
-import { IonAvatar, IonButton, IonCheckbox, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonModal, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonButton, IonCheckbox, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonLoading, IonModal, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../../data/app-context';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import firebase from '../../firebase';
-import { sendSharp } from 'ionicons/icons';
+import { addCircle, sendSharp } from 'ionicons/icons';
 
 
 const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) => void }> = (props) => {
@@ -13,6 +13,8 @@ const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) 
     const [contacts, setContacts] = useState<string[]>([]);
     const [messageValue, setMessageValue] = useState<string>("");
     const [groupName, setGroupName] = useState<string>("");
+
+    const placeholderFirstMessage = "Un grand merci à " + appCtx.userdata.username + " pour avoir créée le groupe !"
 
     useEffect(() => {
         if (!appCtx.userdata.contact) {
@@ -91,9 +93,11 @@ const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) 
     return (
         <>
             <IonModal isOpen={props.showModal} backdropDismiss={false}>
+            <form>
+
                 <IonHeader translucent>
                     <IonToolbar>
-                            <IonTitle>Recherche Contact</IonTitle>
+                            <IonTitle>Création de groupe</IonTitle>
                             <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                 props.setShowModal(false)
                             }}>Retour</IonButton>
@@ -102,29 +106,24 @@ const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) 
 
                 <IonContent fullscreen>
                     <IonList>
+                        <IonItem>
+                            <IonLabel><h2>Nom du groupe :</h2></IonLabel>
+                            <IonInput placeholder="Nom du groupe" value={groupName} onIonChange={(e) => setGroupName(e.detail.value!)} />
+                            <IonLabel position="stacked"><h2>Premier message :</h2></IonLabel>
+                            <IonTextarea value={messageValue} defaultValue={placeholderFirstMessage} placeholder={placeholderFirstMessage} onIonChange={(e) => setMessageValue(e.detail.value!)}></IonTextarea>
+                        </IonItem>
+                    </IonList>
+                    <IonList>
+                        <IonListHeader>Ajouter des membres</IonListHeader>
                         {
                             fillResults()
                         }
                     </IonList>
                 </IonContent>
-
-                <IonFooter>
-                    <form>
-                        <IonItem>
-                            <IonLabel>Nom du groupe : </IonLabel>
-                            <IonInput placeholder="Nom du groupe" value={groupName} onIonChange={(e) => setGroupName(e.detail.value!)} />
-                        </IonItem>
-                        <IonItem>
-                            <IonLabel>Message : </IonLabel>
-                            <IonInput value={messageValue} onIonChange={(e) => setMessageValue(e.detail.value!)} />
-                        </IonItem>
-                        <IonItem>
-                            <IonButton onClick={() => handleCreateGroup()}>
-                                <IonIcon slot="icon-only" icon={sendSharp} />
-                            </IonButton>
-                        </IonItem>
-                    </form>
-                </IonFooter>
+                <IonFab vertical="bottom" slot="fixed" horizontal="center">
+                    <IonFabButton color="success" onClick={() => handleCreateGroup()}>Créer</IonFabButton>
+                </IonFab>
+            </form>
             </IonModal>
             <IonLoading
                 cssClass='my-custom-class'

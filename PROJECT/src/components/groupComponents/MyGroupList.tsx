@@ -1,9 +1,9 @@
-import { IonItem, IonItemSliding, IonLabel, IonList, IonListHeader, IonTitle } from '@ionic/react'
+import { IonAvatar, IonButton, IonItem, IonItemSliding, IonLabel, IonList, IonListHeader, IonTitle } from '@ionic/react'
 import firebase from '../../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Group } from '../../data/app-context';
 import { ROUTE_GROUP } from '../../nav/Routes';
-import { fromDate } from '../../helpers/dateHelper';
+import defaultProfile from '../../assets/defaultProfile.jpg';
 import { useHistory } from 'react-router';
 
 const MyGroupList: React.FC = () => {
@@ -36,29 +36,25 @@ const MyGroupList: React.FC = () => {
 			return (
 				<IonItem>
 					<IonLabel>
-						No groups created for now
+						Vous n'avez créée de groupe.
 					</IonLabel>
 				</IonItem>
 			)
 		} else {
 			return myGroups.map((grp, index) => {
                 return (
-                    <IonItemSliding key={index} onClick={() => handleClick(grp.groupId)}>
-                        <IonItem routerLink={ROUTE_GROUP}>
+                        <IonItem key={index}>
+                            <IonAvatar slot="start">
+                                <img alt='Profile' src={defaultProfile} />
+                            </IonAvatar>
                             <IonLabel>
                                 <h2>{grp.groupName}</h2>
-                                <p>{grp.lastMessage.message}</p>
+                                <p>{grp.users.length} participants</p>
                             </IonLabel>
-                            <IonLabel>
-                                {grp.users.length} participants
-                            </IonLabel>
-                            <IonLabel>
-                                <em>
-                                    {fromDate(grp.lastMessage.sendedAt.seconds)}
-                                </em>
-                            </IonLabel>
+                            <IonButton color="danger" size="default" onClick={() => {
+                                // appCtx.removeGroup(grp.groupId)
+                            }}>Supprimer</IonButton>
                         </IonItem>
-                    </IonItemSliding>
                 )
             })
 		}
@@ -67,7 +63,7 @@ const MyGroupList: React.FC = () => {
     return (
         <IonList>
             <IonListHeader>
-                <IonTitle>Mes groupes : </IonTitle>
+                <IonLabel>Groupe(s) que j'ai créée</IonLabel>
             </IonListHeader>
             {
                 fillMyList()
