@@ -1,8 +1,8 @@
 import firebase from '../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Conversation, defaultUserData, Message, UserData } from '../data/app-context';
-import { IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonTitle } from '@ionic/react';
-import { sendSharp } from 'ionicons/icons';
+import { IonButton, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonTitle } from '@ionic/react';
+import { arrowDownCircle, sendSharp } from 'ionicons/icons';
 
 const ConversationDisp: React.FC<{id: string}> = (props) => {
     const appCtx = useContext(AppContext);
@@ -87,13 +87,21 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 		appCtx.sendMessage(convId, message.trim());
 		setMessageValue('');
 	}
-
+	function scrollToBottom() {
+		let list = document.querySelector("ion-content");
+		return list && list.scrollToBottom();
+	};
 	return (
 		<>
 			<IonLoading
 				isOpen={loading}
 				message="Loading your messages"
 			/>
+			<IonFab vertical="center" horizontal="end" slot="fixed">
+          		<IonFabButton size="small" onClick={() => scrollToBottom()}>
+            		<IonIcon icon={arrowDownCircle} />
+          		</IonFabButton>
+        	</IonFab>
 			<IonHeader translucent className="ion-text-center ion-toolbar-transparent ion-padding">
 				<IonTitle>
 					{alterUser.username}
@@ -101,9 +109,7 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 			</IonHeader>
 			<IonContent>
 				<IonList className="ion-no-border ion-margin reorder-list-active">
-					{
-						loadMessages()
-					}
+					{loadMessages()}
 				</IonList>
 			</IonContent>
 			<IonFooter id='custFooter' className='ion-padding' style={{"backgroundColor":"var(--ion-color-primary)"}}>
