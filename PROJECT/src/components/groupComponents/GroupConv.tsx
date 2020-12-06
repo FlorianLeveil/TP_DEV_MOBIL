@@ -1,14 +1,14 @@
 import firebase from '../../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Group, Message } from '../../data/app-context';
-import { IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonTitle } from '@ionic/react';
-import { sendSharp } from 'ionicons/icons';
+import { IonButton, IonContent, IonFooter, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPopover, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
+import { ellipsisHorizontalSharp, sendSharp } from 'ionicons/icons';
 
 interface oui {
     [key: string]: firebase.firestore.DocumentData;
 }
 
-const GroupConv: React.FC<{id: string, isValid: boolean}> = (props) => {
+const GroupConv: React.FC<{id: string}> = (props) => {
     const appCtx = useContext(AppContext);
 	const db = firebase.firestore();
 	const [loading, setLoading] = useState<boolean>(true);
@@ -17,10 +17,13 @@ const GroupConv: React.FC<{id: string, isValid: boolean}> = (props) => {
 	const [users, setUsers] = useState<oui>({});
 	const [messages, setMessages] = useState<Message[]>([]);
 
+	const [showPopover, setShowPopover] = useState(false);
+
 	useEffect(() => {
 		setLoading(true);
-		db.collection("Groups").doc(props.id)
-			.onSnapshot( async (res) => {
+
+		db.collection("Groups").doc(props.id).get()
+			.then( async (res) => {
 				// SET GROUP DATA
 				setGroup(res.data() as Group);
 
@@ -35,7 +38,7 @@ const GroupConv: React.FC<{id: string, isValid: boolean}> = (props) => {
 
                 setUsers(listUsers);
 
-				db.collection('Messages').where("convId", "==", group.groupId).orderBy("sendedAt", "asc")
+				db.collection('Messages').where("convId", "==", props.id).orderBy("sendedAt", "asc")
                     .onSnapshot(function (querySnapshot) {
                         let listMessages: Message[] = [];
                         querySnapshot.forEach(function (doc) {
@@ -47,7 +50,7 @@ const GroupConv: React.FC<{id: string, isValid: boolean}> = (props) => {
 
 		setLoading(false);
 	//eslint-disable-next-line
-	}, [])
+	}, [props.id])
 
 	const loadMessages = () => {
 		if ( messages.length === 0 ) {
@@ -88,22 +91,37 @@ const GroupConv: React.FC<{id: string, isValid: boolean}> = (props) => {
 		}
 	}
 
-	const handleSendMessage = (convId: string, message: string) => {
-		appCtx.sendMessage(convId, message.trim());
+	const handleSendMessage = (groupId: string, message: string) => {
+		appCtx.groupSendMessage(groupId, message.trim());
 		setMessageValue('');
 	}
 
 	return (
 		<>
+			<IonPopover
+				isOpen={showPopover}
+				cssClass='my-custom-class'
+				onDidDismiss={e => setShowPopover(false)}
+			>
+				<IonList>
+					<IonButton>Ajouter un utilisateur</IonButton>
+					<IonButton>Retirer un utilisateur</IonButton>
+					<IonButton>Ajouter utilisateur aux admins</IonButton>
+					<IonButton>Retirer utilisateur aux admins</IonButton>
+				</IonList>
+			</IonPopover>
 			<IonLoading
 				isOpen={loading}
 				message="Loading your messages"
 			/>
-			<IonHeader translucent className="ion-text-center ion-toolbar-transparent ion-padding">
+			<IonToolbar className="ion-text-center ion-toolbar-transparent ion-padding">
 				<IonTitle>
 					{group.groupName}
 				</IonTitle>
-			</IonHeader>
+				<IonButton slot='end' onClick={() => setShowPopover(true)}>
+					<IonIcon slot="icon-only" icon={ellipsisHorizontalSharp} />
+				</IonButton>
+			</IonToolbar>
 			<IonContent>
 				<IonList className="ion-no-border ion-margin reorder-list-active">
 					{

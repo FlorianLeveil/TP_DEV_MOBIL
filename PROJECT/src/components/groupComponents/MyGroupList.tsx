@@ -26,10 +26,6 @@ const MyGroupList: React.FC = () => {
 			})
 	//eslint-disable-next-line
     }, []);
-
-    const handleClick = (grpId: string) => {
-        history.push(ROUTE_GROUP + grpId);
-    }
     
     const fillMyList = () => {
 		if (myGroups.length === 0) {
@@ -52,7 +48,7 @@ const MyGroupList: React.FC = () => {
                                 <p>{grp.users.length} participants</p>
                             </IonLabel>
                             <IonButton color="danger" size="default" onClick={() => {
-                                // appCtx.removeGroup(grp.groupId)
+                                appCtx.deleteGroup(grp.groupId)
                             }}>Supprimer</IonButton>
                         </IonItem>
                 )

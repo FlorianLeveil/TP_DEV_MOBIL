@@ -1,34 +1,34 @@
 import firebase from '../firebase';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
 import AppContext, { Conversation, defaultUserData, Message, UserData } from '../data/app-context';
 import { IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonTitle } from '@ionic/react';
 import { sendSharp } from 'ionicons/icons';
 
-const ConversationDisp: React.FC = () => {
+const ConversationDisp: React.FC<{id: string}> = (props) => {
     const appCtx = useContext(AppContext);
-	const { id } = useParams<{id: string}>();
 	const db = firebase.firestore();
 	const [loading, setLoading] = useState<boolean>(true);
-	const [conv, setConv] = useState<Conversation>( appCtx.conversations.filter((value) => { return value.convId === id })[0] as Conversation );
+	const [conv, setConv] = useState<Conversation>( appCtx.conversations.filter((value) => { return value.convId === props.id })[0] as Conversation );
 	const [messageValue, setMessageValue] = useState<string>("");
 	const [alterUser, setAlterUser] = useState<UserData>(defaultUserData);
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
 		setLoading(true);
-		db.collection("Conversations").doc(id).get()
+		
+		try {
+			db.collection("Conversations").doc(props.id).get()
 			.then( async (res) => {
 				// SET CONV DATA
 				setConv(res.data() as Conversation);
 
 				// SETUP OTHER USER DATA
-				await db.collection("Users").doc(res.data()?.users.filter((value:string) => { return value !== appCtx.userdata.uid })[0]).get()
-					.then((res) => {
+				db.collection("Users").doc(res.data()?.users.filter((value:string) => { return value !== appCtx.userdata.uid })[0])
+					.onSnapshot((res) => {
 						setAlterUser(res.data() as UserData);
 					})
 
-				db.collection('Messages').where("convId", "==", conv.convId).orderBy("sendedAt", "asc")
+				db.collection('Messages').where("convId", "==", props.id).orderBy("sendedAt", "asc")
                     .onSnapshot(function (querySnapshot) {
                         let listMessages: Message[] = [];
                         querySnapshot.forEach(function (doc) {
@@ -37,10 +37,13 @@ const ConversationDisp: React.FC = () => {
                         setMessages(listMessages);
                     });
 			})
+		} catch (error) {
+			console.log("Error from ConversationDisp : ", error)
+		}
 
 		setLoading(false);
 	//eslint-disable-next-line
-	}, [])
+	}, [props.id])
 
 	const loadMessages = () => {
 		if ( messages.length === 0 ) {

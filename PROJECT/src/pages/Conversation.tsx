@@ -60,7 +60,7 @@ const ConversationComp: React.FC = () => {
 	} else {
 		return (
 			<IonPage>
-				<ConversationDisp />
+				<ConversationDisp id={id} />
 			</IonPage>
 		)
 	}

@@ -14,14 +14,13 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
     const [contact, setContact] = useState<string>("");
 
     useEffect(() => {
-        if (!appCtx.userdata.contact) {
-            setSearchData([]);
-            return;
-        }
+        if (!appCtx.userdata.contact) return;
         firebase.firestore().collection("Contacts").doc(appCtx.userdata.contact)
             .onSnapshot((res) => {
+
                 let contactList: [] = res.data()?.contactList;
                 let resList: firebase.firestore.DocumentData[] = [];
+
                 contactList.forEach( async (contact) => {
                     await firebase.firestore().collection('Users').doc(contact).get()
                         .then((res2) => {
@@ -32,7 +31,7 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
                 setSearchData(resList);
             })
     //eslint-disable-next-line
-    }, [])
+    }, [appCtx.contacts])
 
     const handleCreateConv = () => {
         try {

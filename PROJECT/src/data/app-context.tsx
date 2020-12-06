@@ -112,6 +112,13 @@ interface AppContext {
 
     groups : Group[],
     createGroup: (creatorUser: string, users: string[], groupName: string, message: string) => void,
+    addUsers: (groupId: string, users: string[]) => void,
+    promotAdmin: (groupId: string, userId: string) => void,
+    demoteAdmin: (groupId: string, userId: string) => void,
+    groupSendMessage: (groupId: string, message: any) => void,
+    removeUsers: (groupId: string, users: string[]) => void,
+    quitGroup: (groupId: string) => void,
+    deleteGroup: (groupId: string) => void,
 
     user: firebase.User | null,
     authenticated: boolean;
@@ -140,6 +147,13 @@ const AppContext = React.createContext<AppContext>({
 
     groups: [],
     createGroup: () => { },
+    addUsers: () => { },
+    promotAdmin: () => { },
+    demoteAdmin: () => { },
+    groupSendMessage: () => { },
+    removeUsers: () => { },
+    quitGroup: () => { },
+    deleteGroup: () => { },
 
     user: null,
     authenticated: false,

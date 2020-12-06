@@ -316,6 +316,13 @@ const AppContextProvider: React.FC = (props) => {
         })
     }
 
+    /**
+     * @param creatorUser String of users creating the group
+     * @param users List of users that will be automatically added to the group at creation
+     * @param groupName String containing name of the group, can be empty -> the name will be "creatorName-groupId"
+     * @param message String can be empty (no message send at start of the conversation)
+     * @description Makes connected user quit the group
+     */
     const createGroup = async (creatorUser: string, users: string[], groupName: string, message: string) => {
         const db = firebase.firestore();
         await db.collection("Groups").add({
@@ -353,6 +360,218 @@ const AppContextProvider: React.FC = (props) => {
                 })
             }
         })
+    }
+
+    /**
+     * @param groupId Id from a group
+     * @param users user's id list
+     * @description Add users to an existing group
+     */
+    const addUsers = (groupId: string, users: string[]) => {
+        const db = firebase.firestore();
+        db.collection("Groups").doc(groupId).get()
+            .then((res) => {
+                let groupInf = res.data() as Group;
+
+                db.collection("Groups").doc(groupId).update({
+                    users: groupInf.users.push(...users),
+                }).then(() => {
+                    db.collection("Messages").add({
+                        convId: groupId,
+                        message: `${users.join(", ")} joined`,
+                        sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        senderId: "system"
+                    }).then((msgRes) => {
+                        groupInf.messages.push(msgRes.id)
+                        db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                            db.collection("Groups").doc(res.id).update({
+                                lastMessage: resMessage.data(),
+                                messages: groupInf.messages
+                            })
+                        })
+                    })
+                })
+            })
+    }
+
+    /**
+     * @param groupId Id from a group
+     * @param userId user's id
+     * @description Elevate a users to admin in an existing group
+     */
+    const promotAdmin = (groupId: string, userId: string) => {
+        const db = firebase.firestore();
+        db.collection("Groups").doc(groupId).get()
+            .then((res) => {
+                let groupInf = res.data() as Group;
+
+                db.collection("Groups").doc(groupId).update({
+                    adminUsers: groupInf.adminUsers.push(userId),
+                }).then(() => {
+                    db.collection("Messages").add({
+                        convId: groupId,
+                        message: `${userId} has been promoted`,
+                        sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        senderId: "system"
+                    }).then((msgRes) => {
+                        groupInf.messages.push(msgRes.id)
+                        db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                            db.collection("Groups").doc(res.id).update({
+                                lastMessage: resMessage.data(),
+                                messages: groupInf.messages
+                            })
+                        })
+                    })
+                })
+            })
+    }
+
+    /**
+     * @param groupId Id from a group
+     * @param userId user's id
+     * @description Demote a users from admin to peon in an existing group
+     */
+    const demoteAdmin = (groupId: string, userId: string) => {
+        const db = firebase.firestore();
+        db.collection("Groups").doc(groupId).get()
+            .then((res) => {
+                let groupInf = res.data() as Group;
+                let filtAdmins = groupInf.adminUsers.filter((val) => { return val !== userId });
+
+                db.collection("Groups").doc(groupId).update({
+                    adminUsers: filtAdmins,
+                }).then(() => {
+                    db.collection("Messages").add({
+                        convId: groupId,
+                        message: `${userId} has been demoted`,
+                        sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        senderId: "system"
+                    }).then((msgRes) => {
+                        groupInf.messages.push(msgRes.id)
+                        db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                            db.collection("Groups").doc(res.id).update({
+                                lastMessage: resMessage.data(),
+                                messages: groupInf.messages
+                            })
+                        })
+                    })
+                })
+            })
+    }
+
+    /**
+     * @param groupId Id from a group
+     * @param message user's message
+     * @description Demote a users from admin to peon in an existing group
+     */
+    const groupSendMessage = (groupId: string, message: string) => {
+        const db = firebase.firestore();
+
+        db.collection("Groups").doc(groupId).get()
+            .then((res) => {
+                let currentGrp = res.data() as Group;
+                db.collection("Messages").add({
+                    convId: groupId,
+                    message: message,
+                    sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    senderId: userdata.uid
+                }).then((msgRes) => {
+                    currentGrp.messages.push(msgRes.id);
+                    db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                        db.collection("Groups").doc(res.id).update({
+                            lastMessage: resMessage.data(),
+                            messages: currentGrp.messages
+                        })
+                    })
+                })
+            })
+    }
+
+    /**
+     * @param groupId Id from a group
+     * @param users user's id list
+     * @description Elevate a users to admin in an existing group
+     */
+    const removeUsers = (groupId: string, users: string[]) => {
+        const db = firebase.firestore();
+        db.collection("Groups").doc(groupId).get()
+            .then((res) => {
+                let groupInf = res.data() as Group;
+                let filtUsers = groupInf.users.filter((val) => { return users.includes(val) });
+                let filtAdmins = groupInf.adminUsers.filter((val) => { return users.includes(val) });
+
+                db.collection("Groups").doc(groupId).update({
+                    users: filtUsers,
+                    adminUsers: filtAdmins
+                }).then(() => {
+                    db.collection("Messages").add({
+                        convId: groupId,
+                        message: `${filtUsers.join(", ")} were removed`,
+                        sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        senderId: "system"
+                    }).then((msgRes) => {
+                        groupInf.messages.push(msgRes.id)
+                        db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                            db.collection("Groups").doc(res.id).update({
+                                lastMessage: resMessage.data(),
+                                messages: groupInf.messages
+                            })
+                        })
+                    })
+                })
+            })
+    }
+
+    /**
+     * @param groupId
+     * @description Makes connected user quit the group
+     */
+    const quitGroup = (groupId: string) => {
+        const db = firebase.firestore();
+        db.collection("Groups").doc(groupId).get()
+            .then((res) => {
+                let groupInf = res.data() as Group;
+                let filtUsers = groupInf.users.filter((val) => { return val !== userdata.uid });
+                let filtAdmins = groupInf.adminUsers.filter((val) => { return val !== userdata.uid });
+
+                db.collection("Groups").doc(groupId).update({
+                    users: filtUsers,
+                    adminUsers: filtAdmins
+                }).then(() => {
+                    db.collection("Messages").add({
+                        convId: groupId,
+                        message: `${userdata.username} has quit`,
+                        sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        senderId: "system"
+                    }).then((msgRes) => {
+                        groupInf.messages.push(msgRes.id)
+                        db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                            db.collection("Groups").doc(res.id).update({
+                                lastMessage: resMessage.data(),
+                                messages: groupInf.messages
+                            })
+                        })
+                    })
+                })
+            })
+    }
+
+    /**
+     * @param groupId
+     * @description Makes connected user delete the group and all messages
+     */
+    const deleteGroup = (groupId: string) => {
+        const db = firebase.firestore();
+        db.collection("Groups").doc(groupId).delete()
+            .then(() => {
+                db.collection("Messages").where("convId", "==", groupId).get()
+                    .then((res) => {
+                        res.forEach((msg) => {
+                            msg.ref.delete();
+                        })
+                    })
+            })
+            
     }
 
     const initContext = async () => {
@@ -396,6 +615,13 @@ const AppContextProvider: React.FC = (props) => {
 
             groups,
             createGroup,
+            addUsers,
+            promotAdmin,
+            demoteAdmin,
+            groupSendMessage,
+            removeUsers,
+            quitGroup,
+            deleteGroup,
             
             user,
             authenticated: user !== null,

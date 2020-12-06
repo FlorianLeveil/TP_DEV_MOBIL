@@ -30,7 +30,7 @@ const GroupComp: React.FC = () => {
 			console.log(e);
 		}
 	//eslint-disable-next-line
-	}, []);
+	}, [ id ]);
 
 	if (showAlert) {
 		return (
@@ -62,7 +62,7 @@ const GroupComp: React.FC = () => {
 	} else {
 		return (
 			<IonPage>
-				<GroupConv id={ id } isValid={ showAlert } />
+				<GroupConv id={ id } />
 			</IonPage>
 		)
 	}

@@ -28,10 +28,6 @@ const OtGroupList: React.FC = () => {
 	//eslint-disable-next-line
     }, []);
 
-    const handleClick = (grpId: string) => {
-        history.push(ROUTE_GROUP + grpId)
-    }
-
     const fillOtList = () => {
 		if (otGroups.length === 0) {
 			return (
@@ -53,7 +49,7 @@ const OtGroupList: React.FC = () => {
                                 <p>{grp.users.length} participants</p>
                             </IonLabel>
                             <IonButton color="danger" size="default" onClick={() => {
-                                // appCtx.removeGroup(grp.groupId)
+                                appCtx.quitGroup(grp.groupId)
                             }}>Quitter</IonButton>
                         </IonItem>
                 )
