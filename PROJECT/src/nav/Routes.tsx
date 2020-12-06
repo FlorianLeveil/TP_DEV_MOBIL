@@ -6,6 +6,7 @@ export const ROUTE_HOME = '/home/';
 export const ROUTE_CONNEXION = '/connexion/';
 export const ROUTE_CONVERSATION = '/conversation/'
 
+export const ROUTE_GROUP = '/group/'
 
 export const ROUTE_AUTH_BASE = "/auth/";
 export const ROUTE_LOGIN = ROUTE_AUTH_BASE + 'login/'

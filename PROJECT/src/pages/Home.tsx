@@ -1,15 +1,16 @@
 import { IonContent, IonFab, IonFabButton, IonIcon, IonLoading, IonPage } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './Home.css';
 import HomeConversation from '../components/HomeConversation';
 import { add } from 'ionicons/icons';
 import StartConversation from '../components/StartConversation';
+import AppContext from '../data/app-context';
 
 
 const Home: React.FC = () => {
-	// eslint-disable-next-line
+	const appCtx = useContext(AppContext);
 	const [ showLoading, setShowLoading ] = useState<boolean>(true);
-	const [showModal, setShowModal] = useState(false);
+	const [ showModal, setShowModal ] = useState(false);
 
 	return (
 		<>
@@ -24,7 +25,7 @@ const Home: React.FC = () => {
 			<IonPage>
 				<IonContent>
 					<HomeConversation />
-					<IonFab vertical="bottom" horizontal="end" slot="fixed">
+					<IonFab vertical={appCtx.conversations.length > 0 ? "bottom" : "center"} horizontal={appCtx.conversations.length > 0 ? "end" : "center"} slot="fixed">
 						<IonFabButton onClick={() => setShowModal(true)}>
 							<IonIcon icon={add} />
           				</IonFabButton>

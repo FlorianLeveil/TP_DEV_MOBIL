@@ -13,7 +13,7 @@ export const fromDate = (time: number) => {
         client_time = Math.round(Date.now() / NORMALIZE),
         rounded_time,
         elapsed_time,
-        RESPONSE = '';
+        RESPONSE = 'Last message ';
 
     if (client_time < time) {
         client_time = time;
@@ -21,18 +21,18 @@ export const fromDate = (time: number) => {
     elapsed_time = (client_time - time);
 
     if (elapsed_time === 0) {
-        RESPONSE = ' just a second ago';
+        RESPONSE += ' just a second ago';
     } else if ((elapsed_time > 0) && (elapsed_time < MINUTE)) {
-        RESPONSE = (elapsed_time === 1) ? 'one second ago' : (elapsed_time + ' seconds ago');
+        RESPONSE += (elapsed_time === 1) ? 'one second ago' : (elapsed_time + ' seconds ago');
     } else if ((elapsed_time >= MINUTE) && (elapsed_time < HOUR)) {
         rounded_time = Math.floor(elapsed_time / MINUTE);
-        RESPONSE = (rounded_time === 1) ? 'one minute ago' : (rounded_time + ' minutes ago');
+        RESPONSE += (rounded_time === 1) ? 'one minute ago' : (rounded_time + ' minutes ago');
     } else if ((elapsed_time >= HOUR) && (elapsed_time < DAY)) {
         rounded_time = Math.floor(elapsed_time / HOUR);
-        RESPONSE = (rounded_time === 1) ? 'one hour ago' : (rounded_time + ' hours ago');
+        RESPONSE += (rounded_time === 1) ? 'one hour ago' : (rounded_time + ' hours ago');
     } else if ((elapsed_time >= DAY)) {
         rounded_time = new Date(time * NORMALIZE);
-        RESPONSE = 'on ' + rounded_time.toLocaleDateString('en-US');
+        RESPONSE += 'on ' + rounded_time.toLocaleDateString('en-US');
     }
     return RESPONSE;
 }

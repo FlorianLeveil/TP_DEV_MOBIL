@@ -1,17 +1,18 @@
-import { IonAvatar, IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonModal, IonRadio, IonRadioGroup, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonButton, IonCheckbox, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonModal, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
-import AppContext from '../data/app-context';
-import defaultProfile from '../assets/defaultProfile.jpg';
-import firebase from '../firebase';
+import AppContext from '../../data/app-context';
+import defaultProfile from '../../assets/defaultProfile.jpg';
+import firebase from '../../firebase';
 import { sendSharp } from 'ionicons/icons';
 
 
-const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boolean) => void }> = (props) => {
+const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) => void }> = (props) => {
     const appCtx = useContext(AppContext);
     const [showLoading, setShowLoading] = useState<boolean>(true);
     const [searchData, setSearchData] = useState<firebase.firestore.DocumentData[]>([]);
+    const [contacts, setContacts] = useState<string[]>([]);
     const [messageValue, setMessageValue] = useState<string>("");
-    const [contact, setContact] = useState<string>("");
+    const [groupName, setGroupName] = useState<string>("");
 
     useEffect(() => {
         if (!appCtx.userdata.contact) {
@@ -34,14 +35,24 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
     //eslint-disable-next-line
     }, [])
 
-    const handleCreateConv = () => {
+    const handleCheckBoxes = (id: string) => {
+        contacts.includes(id) ?
+            setContacts(contacts.filter((val) => { return val !== id })) :
+            setContacts((prevState) => {
+                prevState.push(id);
+                return prevState;
+            });
+    }
+
+    const handleCreateGroup = () => {
         try {
-            appCtx.startConv(contact, messageValue);
+            appCtx.createGroup(appCtx.user!.uid, contacts, groupName, messageValue);
             setTimeout(() => {
-                setContact("");
-                setMessageValue("");
+                setContacts([]);
+                setMessageValue('');
+                setGroupName('');
                 props.setShowModal(false);
-            }, 1000);
+            }, 2000)
         } catch (error) {
             console.log("Error in start conversation : ", error);
         }
@@ -71,7 +82,7 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
                         <p>{value.data()?.email}</p>
                     </IonLabel>
                     
-                    <IonRadio value={value.data().uid} />
+                    <IonCheckbox checked={contacts.includes(value.data().uid)} value={value.data().uid} onIonChange={(e) => handleCheckBoxes(e.detail.value)} />
                 </IonItem>
             ))
         }
@@ -91,24 +102,28 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
 
                 <IonContent fullscreen>
                     <IonList>
-                        <IonRadioGroup onIonChange={(e) => setContact(e.detail.value)}>
-                            {
-                                fillResults()
-                            }
-                        </IonRadioGroup>
+                        {
+                            fillResults()
+                        }
                     </IonList>
                 </IonContent>
 
                 <IonFooter>
-                    <IonItem>
-                        <IonLabel>Message : </IonLabel>
-                        <IonInput value={messageValue} onIonChange={(e) => setMessageValue(e.detail.value!)} />
-                    </IonItem>
-                    <IonItem>
-                        <IonButton onClick={() => handleCreateConv()}>
-                            <IonIcon slot="icon-only" icon={sendSharp} />
-                        </IonButton>
-                    </IonItem>
+                    <form>
+                        <IonItem>
+                            <IonLabel>Nom du groupe : </IonLabel>
+                            <IonInput placeholder="Nom du groupe" value={groupName} onIonChange={(e) => setGroupName(e.detail.value!)} />
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel>Message : </IonLabel>
+                            <IonInput value={messageValue} onIonChange={(e) => setMessageValue(e.detail.value!)} />
+                        </IonItem>
+                        <IonItem>
+                            <IonButton onClick={() => handleCreateGroup()}>
+                                <IonIcon slot="icon-only" icon={sendSharp} />
+                            </IonButton>
+                        </IonItem>
+                    </form>
                 </IonFooter>
             </IonModal>
             <IonLoading
@@ -122,4 +137,4 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
     );
 };
 
-export default StartConversation
+export default GroupModal

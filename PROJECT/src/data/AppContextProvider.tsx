@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AppContext, { Contact, Conversation, defaultContact, defaultUserData, UserData } from './app-context';
-import { Plugins } from '@capacitor/core'
-import firebase from "../firebase"
+import AppContext, { Contact, Conversation, defaultContact, defaultUserData, Group, UserData } from './app-context';
+import { Plugins } from '@capacitor/core';
+import firebase from "../firebase";
 
 const { Storage } = Plugins;
 
 const AppContextProvider: React.FC = (props) => {
-    const [userdata, setUserData] = useState<UserData>(defaultUserData as UserData)
-    const [contacts, setContacts] = useState<Contact>(defaultContact as Contact)
-    const [conversations, setConversations] = useState<Conversation[]>([])
+    const [userdata, setUserData] = useState<UserData>(defaultUserData as UserData);
+    const [contacts, setContacts] = useState<Contact>(defaultContact as Contact);
+    const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [groups, setGroups] = useState<Group[]>([]);
 
     // Auth state
     const [user, setUser] = useState(null as firebase.User | null);
@@ -26,22 +27,31 @@ const AppContextProvider: React.FC = (props) => {
                 db.collection("Users").doc(firebaseUser.uid)
                     .onSnapshot(function (doc) {
                         const updatedProfile = doc.data() as UserData;
-                        setUserData(updatedProfile)
+                        setUserData(updatedProfile);
                     });
 
                 db.collection("Contacts").where("uidUser", "==", firebaseUser.uid)
                     .onSnapshot(function (doc) {
                         const updatedContact = doc.docs[0].data() as Contact;
-                        setContacts(updatedContact)
+                        setContacts(updatedContact);
                     });
 
-                db.collection("Conversations").where("users", "array-contains", firebaseUser.uid)
+                db.collection("Conversations").where("users", "array-contains", firebaseUser.uid).orderBy("lastMessage.sendedAt", "desc")
                     .onSnapshot((res) => {
                         let list : Conversation[] = [];
                         res.docs.forEach((elem) => {
-                            list.push(elem.data() as Conversation)
+                            list.push(elem.data() as Conversation);
                         })
-                        setConversations(list)
+                        setConversations(list);
+                    });
+
+                db.collection("Groups").where("users", "array-contains", firebaseUser.uid).orderBy("lastMessage.sendedAt", "desc")
+                    .onSnapshot((res) => {
+                        let list : Group[] = [];
+                        res.docs.forEach((elem) => {
+                            list.push(elem.data() as Group);
+                        })
+                        setGroups(list);
                     });
             }
         });
@@ -52,10 +62,11 @@ const AppContextProvider: React.FC = (props) => {
             Storage.set({ key: 'userdata', value: JSON.stringify(userdata) });
             Storage.set({ key: 'contactList', value: JSON.stringify(contacts) });
             Storage.set({ key: 'conversations', value: JSON.stringify(conversations) });
+            Storage.set({ key: 'groups', value: JSON.stringify(groups) });
         } else {
             didMountRef.current = true;
         }
-    }, [userdata, contacts, conversations])
+    }, [userdata, contacts, conversations, groups])
 
     const setupUserData = (user: any) => {
         firebase.firestore().collection('Users').doc(user.user.uid).get()
@@ -227,6 +238,34 @@ const AppContextProvider: React.FC = (props) => {
 
     const startConv = async (receiverId: string, message: any) => {
         const db = firebase.firestore();
+        let exists = false;
+
+        conversations.forEach((conv) => {
+            if ((conv.users.length === 2) && (conv.users.includes(receiverId))) {
+                db.collection("Messages").add({
+                    convId: conv.convId,
+                    message: message,
+                    sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    senderId: userdata.uid
+                }).then((res) => {
+                    const filtered = conversations.filter((value) => { return value.convId === conv.convId; })[0];
+                    filtered.messages.push(res.id);
+                    db.collection("Messages").doc(res.id).get().then((res2) => {
+                        db.collection("Conversations").doc(conv.convId).update({
+                            lastMessage: res2.data(),
+                            messages: filtered.messages
+                        });
+                    });
+                }).catch((err) => {
+                    console.log(err)
+                })
+
+                exists = true;
+            }
+        })
+
+        if (exists) return ;
+
         db.collection("Conversations").add({
             convId:"",
             lastMessage: {},
@@ -257,7 +296,8 @@ const AppContextProvider: React.FC = (props) => {
     }
 
     const sendMessage = async (convId: string, message: any) => {
-        firebase.firestore().collection("Messages").add({
+        const db = firebase.firestore();
+        db.collection("Messages").add({
             convId: convId,
             message: message,
             sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -265,8 +305,8 @@ const AppContextProvider: React.FC = (props) => {
         }).then((res) => {
             const filtered = conversations.filter((value) => { return value.convId === convId; })[0];
             filtered.messages.push(res.id);
-            firebase.firestore().collection("Messages").doc(res.id).get().then((res2) => {
-                firebase.firestore().collection("Conversations").doc(convId).update({
+            db.collection("Messages").doc(res.id).get().then((res2) => {
+                db.collection("Conversations").doc(convId).update({
                     lastMessage: res2.data(),
                     messages: filtered.messages
                 });
@@ -276,20 +316,62 @@ const AppContextProvider: React.FC = (props) => {
         })
     }
 
+    const createGroup = async (creatorUser: string, users: string[], groupName: string, message: string) => {
+        const db = firebase.firestore();
+        await db.collection("Groups").add({
+            groupId: "",
+            groupName: "",
+            lastMessage: {},
+            messages: [],
+            users: [
+                ...users,
+                creatorUser
+            ],
+            adminUsers: [
+                creatorUser,
+            ],
+            creatorId: creatorUser
+        }).then((res) => {
+            db.collection("Groups").doc(res.id).update({
+                groupId: res.id,
+                groupName: groupName ? groupName : `${userdata.username}-${res.id}`
+            })
+
+            if (message) {
+                db.collection("Messages").add({
+                    convId: res.id,
+                    message: message,
+                    sendedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    senderId: userdata.uid
+                }).then((msgRes) => {
+                    db.collection("Messages").doc(msgRes.id).get().then((resMessage) => {
+                        db.collection("Groups").doc(res.id).update({
+                            lastMessage: resMessage.data(),
+                            messages: [resMessage.id]
+                        })
+                    })
+                })
+            }
+        })
+    }
+
     const initContext = async () => {
         const userData = await Storage.get({ key: 'userdata' });
         const contactList = await Storage.get({ key: 'contactList' });
         const conversationList = await Storage.get({ key: 'conversations' });
+        const groupList = await Storage.get({ key: 'groups' });
 
         const storedUserData = userData.value ? JSON.parse(userData.value) : defaultUserData;
         const storedContactList = contactList.value ? JSON.parse(contactList.value) : defaultContact;
         const storedConversationList = conversationList.value ? JSON.parse(conversationList.value) : [];
+        const storedGroupList = groupList.value ? JSON.parse(groupList.value) : [];
         
         didMountRef.current = false;
 
         setUserData(storedUserData);
         setContacts(storedContactList);
         setConversations(storedConversationList);
+        setGroups(storedGroupList);
     }
 
     return (
@@ -311,6 +393,9 @@ const AppContextProvider: React.FC = (props) => {
             conversations,
             sendMessage,
             startConv,
+
+            groups,
+            createGroup,
             
             user,
             authenticated: user !== null,

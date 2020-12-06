@@ -5,12 +5,13 @@ import { IonBadge, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, 
 import { personAdd, settings, people, home } from 'ionicons/icons';
 import Contact from '../pages/Contact';
 import Profile from '../pages/Profile';
-import Group from '../pages/Group_main';
+import GroupsListing from '../pages/Group_main';
 import Home from '../pages/Home';
-import { ROUTE_CONTACT, ROUTE_PROFILE, ROUTE_GROUP_MAIN, ROUTE_HOME, ROUTE_NAV, ROUTE_CONVERSATION } from './Routes';
+import { ROUTE_CONTACT, ROUTE_PROFILE, ROUTE_GROUP_MAIN, ROUTE_HOME, ROUTE_NAV, ROUTE_CONVERSATION, ROUTE_GROUP } from './Routes';
 import firebase from 'firebase';
 import AppContext from '../data/app-context';
 import Conversation from '../pages/Conversation';
+import GroupComp from '../pages/GroupConversation';
 
 const Nav: React.FC = () => {
     const appCtx = useContext(AppContext);
@@ -43,7 +44,8 @@ const Nav: React.FC = () => {
                 <Route path={ROUTE_CONTACT} component={Contact} exact />
                 <Route path={ROUTE_PROFILE + id_current_user} component={Profile} exact />
                 <Route path={`${ROUTE_CONVERSATION}:id`} component={Conversation} exact />
-                <Route path={ROUTE_GROUP_MAIN} component={Group} exact />
+                <Route path={`${ROUTE_GROUP}:id`} component={GroupComp} exact />
+                <Route path={ROUTE_GROUP_MAIN} component={GroupsListing} exact />
                 <Route path={ROUTE_HOME} component={Home} exact />
                 <Redirect path={ROUTE_NAV} exact to={ROUTE_HOME} />
             </IonRouterOutlet>

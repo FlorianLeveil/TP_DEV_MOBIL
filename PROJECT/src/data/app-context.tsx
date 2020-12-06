@@ -9,6 +9,13 @@ export interface Message {
     senderId: string
 }
 
+export const defaultMessage: Message = {
+    convId: "",
+    message: "",
+    sendedAt: {} as firebase.firestore.Timestamp,
+    senderId: "",
+}
+
 export interface Picture {
     id: string,
     filename: string,
@@ -60,16 +67,26 @@ export const defaultContact: Contact = {
 
 export interface Conversation {
     convId: string,
-    lastMessage: string,
+    lastMessage: Message,
     messages: string[],
     users: string[]
 }
 
 export const defaultConversation: Conversation = {
     convId: "",
-    lastMessage: "",
+    lastMessage: defaultMessage,
     messages: [],
     users: []
+}
+
+export interface Group {
+    groupId: string,
+    groupName: string,
+    lastMessage: Message,
+    messages: string[],
+    users: string[],
+    adminUsers: string[],
+    creatorId: string
 }
 
 export type UserInformationFields = "username" | "name" | "lastname" | "email" | "description";
@@ -92,6 +109,9 @@ interface AppContext {
     conversations: Conversation[],
     sendMessage: (convId: string, message: any) => void,
     startConv: (receiverId: string, message: any) => void,
+
+    groups : Group[],
+    createGroup: (creatorUser: string, users: string[], groupName: string, message: string) => void,
 
     user: firebase.User | null,
     authenticated: boolean;
@@ -117,6 +137,9 @@ const AppContext = React.createContext<AppContext>({
     conversations: [],
     sendMessage: () => { },
     startConv: () => { },
+
+    groups: [],
+    createGroup: () => { },
 
     user: null,
     authenticated: false,
