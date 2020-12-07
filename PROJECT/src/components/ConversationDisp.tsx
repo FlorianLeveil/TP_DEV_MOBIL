@@ -1,8 +1,9 @@
 import firebase from '../firebase';
 import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Conversation, defaultUserData, Message, UserData } from '../data/app-context';
-import { IonButton, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonTitle } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonFab, IonFabButton, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle } from '@ionic/react';
 import { arrowDownCircle, sendSharp } from 'ionicons/icons';
+import './ConversationDisp.scss'
 
 const ConversationDisp: React.FC<{id: string}> = (props) => {
     const appCtx = useContext(AppContext);
@@ -54,29 +55,37 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 			)
 		} else {
 			return messages.map((msg: Message, index) => {
+				let messagedate = msg.sendedAt.toDate()
+				let month = messagedate.getMonth()
+				let day = messagedate.getDate()
+				let hours = messagedate.getHours()
+				let minutes =messagedate.getMinutes()
 				if (msg.senderId === appCtx.userdata.uid) {
                     return (
-                        <IonItem key={index}>
-                            <IonLabel slot='end' className='ion-text-right' color='primary'>
-                                {msg.message}
-                            </IonLabel>
-                        </IonItem>
+						<IonRow key={index} class="ion-justify-content-end">
+							<IonCol className="ion-text-start" size="6" id="date"><p>{day + "/" + month + " " + hours + ":" + minutes}</p></IonCol>
+
+							<IonCol size="6" className='ion-align-self-end ion-text-end' color='primary'>
+								<IonItem id="message" color="primary">{msg.message}</IonItem>
+							</IonCol>
+						</IonRow>
                     )
                 } else if ( msg.senderId === "system") {
                     return (
-                        <IonItem key={index}>
-                            <IonLabel slot="center" className="ion-text-justify" color="warning">
-                                {msg.message}
-                            </IonLabel>
-                        </IonItem>
+							<IonRow key={index}>
+							<IonCol slot='center' className='ion-text-justify' color='warning'>
+							{msg.message}
+							</IonCol>
+						</IonRow>
                     )
                 } else {
                     return (
-                        <IonItem key={index}>
-                            <IonLabel slot='start' className='ion-text-left' color='black'>
-                                {msg.message}
-                            </IonLabel>
-                        </IonItem>
+							<IonRow key={index}>
+								<IonCol size="6" className='ion-text-start' color='black'>
+								  <IonItem id="message" color="secondary">{msg.message}</IonItem>
+								</IonCol>
+								<IonCol className="ion-text-end" size="6" id="date"><p>{day + "/" + month + " " + hours + ":" + minutes}</p></IonCol>
+							</IonRow>
                     )
                 }
 			})
@@ -109,7 +118,9 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 			</IonHeader>
 			<IonContent>
 				<IonList className="ion-no-border ion-margin reorder-list-active">
+					<IonGrid>
 					{loadMessages()}
+					</IonGrid>
 				</IonList>
 			</IonContent>
 			<IonFooter id='custFooter' className='ion-padding' style={{"backgroundColor":"var(--ion-color-primary)"}}>
