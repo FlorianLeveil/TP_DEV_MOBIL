@@ -13,7 +13,14 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 	const [messageValue, setMessageValue] = useState<string>("");
 	const [alterUser, setAlterUser] = useState<UserData>(defaultUserData);
 	const [messages, setMessages] = useState<Message[]>([]);
-
+	function computedate(msg: Message) {
+		let messagedate = msg.sendedAt.toDate()
+		let month = messagedate.getMonth()
+		let day = messagedate.getDate()
+		let hours = messagedate.getHours()
+		let minutes =messagedate.getMinutes()
+		return day + "/" + month + " " + hours + ":" + minutes
+	}
 	useEffect(() => {
 		setLoading(true);
 		
@@ -55,15 +62,11 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 			)
 		} else {
 			return messages.map((msg: Message, index) => {
-				let messagedate = msg.sendedAt.toDate()
-				let month = messagedate.getMonth()
-				let day = messagedate.getDate()
-				let hours = messagedate.getHours()
-				let minutes =messagedate.getMinutes()
+
 				if (msg.senderId === appCtx.userdata.uid) {
                     return (
 						<IonRow key={index} class="ion-justify-content-end">
-							<IonCol className="ion-text-start" size="6" id="date"><p>{day + "/" + month + " " + hours + ":" + minutes}</p></IonCol>
+							<IonCol className="ion-text-start" size="6" id="date"><p>{msg.sendedAt ? computedate(msg) : ""}</p></IonCol>
 
 							<IonCol size="6" className='ion-align-self-end ion-text-end' color='primary'>
 								<IonItem id="message" color="primary">{msg.message}</IonItem>
@@ -84,7 +87,7 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 								<IonCol size="6" className='ion-text-start' color='black'>
 								  <IonItem id="message" color="secondary">{msg.message}</IonItem>
 								</IonCol>
-								<IonCol className="ion-text-end" size="6" id="date"><p>{day + "/" + month + " " + hours + ":" + minutes}</p></IonCol>
+								<IonCol className="ion-text-end" size="6" id="date"><p>{msg.sendedAt ? computedate(msg) : ""}</p></IonCol>
 							</IonRow>
                     )
                 }
