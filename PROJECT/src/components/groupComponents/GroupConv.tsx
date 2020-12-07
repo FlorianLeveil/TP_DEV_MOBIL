@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Group, Message } from '../../data/app-context';
 import { IonButton, IonContent, IonFooter, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPopover, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
 import { ellipsisHorizontalSharp, sendSharp } from 'ionicons/icons';
+import GroupInformationItem from './GroupInformation';
 
 interface oui {
     [key: string]: firebase.firestore.DocumentData;
@@ -50,7 +51,7 @@ const GroupConv: React.FC<{id: string}> = (props) => {
 
 		setLoading(false);
 	//eslint-disable-next-line
-	}, [props.id])
+	}, [props.id, group.users])
 
 	const loadMessages = () => {
 		if ( messages.length === 0 ) {
@@ -91,6 +92,34 @@ const GroupConv: React.FC<{id: string}> = (props) => {
 		}
 	}
 
+	const fillMenu = () => {
+		if (group.creatorId === appCtx.userdata.uid) {
+			return (
+				<>
+					<GroupInformationItem action={"addUser"} text={"Ajouter un membre"} group={group} />
+					<GroupInformationItem action={"remUser"} text={"Retirer un membre"} group={group} />
+					<GroupInformationItem action={"eleUser"} text={"Élever un membre"} group={group} />
+					<GroupInformationItem action={"retUser"} text={"Rétrograder un membre"} group={group} />
+					<GroupInformationItem action={"delConv"} text={"Supprimer"} group={group} />
+				</>
+			)
+		} else if (group.adminUsers.includes(appCtx.userdata.uid)) {
+			return (
+				<>
+					<GroupInformationItem action={"addUser"} text={"Ajouter un membre"} group={group} />
+					<GroupInformationItem action={"remUser"} text={"Retirer un membre"} group={group} />
+					<GroupInformationItem action={"quitCon"} text={"Quitter la conversation"} group={group} />
+				</>
+			)
+		} else {
+			return (
+				<>
+					<GroupInformationItem action={"quitCon"} text={"Quitter la conversation"} group={group} />
+				</>
+			)
+		}
+	}
+
 	const handleSendMessage = (groupId: string, message: string) => {
 		appCtx.groupSendMessage(groupId, message.trim());
 		setMessageValue('');
@@ -104,10 +133,9 @@ const GroupConv: React.FC<{id: string}> = (props) => {
 				onDidDismiss={e => setShowPopover(false)}
 			>
 				<IonList>
-					<IonButton>Ajouter un utilisateur</IonButton>
-					<IonButton>Retirer un utilisateur</IonButton>
-					<IonButton>Ajouter utilisateur aux admins</IonButton>
-					<IonButton>Retirer utilisateur aux admins</IonButton>
+					{
+						fillMenu()
+					}
 				</IonList>
 			</IonPopover>
 			<IonLoading
