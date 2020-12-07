@@ -374,9 +374,10 @@ const AppContextProvider: React.FC = (props) => {
         db.collection("Groups").doc(groupId).get()
             .then((res) => {
                 let groupInf = res.data() as Group;
+                groupInf.users.push(...users)
 
                 db.collection("Groups").doc(groupId).update({
-                    users: groupInf.users.push(...users),
+                    users: groupInf.users
                 }).then(() => {
                     db.collection("Messages").add({
                         convId: groupId,
@@ -406,9 +407,10 @@ const AppContextProvider: React.FC = (props) => {
         db.collection("Groups").doc(groupId).get()
             .then((res) => {
                 let groupInf = res.data() as Group;
+                groupInf.adminUsers.push(userId);
 
                 db.collection("Groups").doc(groupId).update({
-                    adminUsers: groupInf.adminUsers.push(userId),
+                    adminUsers: groupInf.adminUsers,
                 }).then(() => {
                     db.collection("Messages").add({
                         convId: groupId,
@@ -499,8 +501,8 @@ const AppContextProvider: React.FC = (props) => {
         db.collection("Groups").doc(groupId).get()
             .then((res) => {
                 let groupInf = res.data() as Group;
-                let filtUsers = groupInf.users.filter((val) => { return users.includes(val) });
-                let filtAdmins = groupInf.adminUsers.filter((val) => { return users.includes(val) });
+                let filtUsers = groupInf.users.filter((val) => { return !users.includes(val) });
+                let filtAdmins = groupInf.adminUsers.filter((val) => { return !users.includes(val) });
 
                 db.collection("Groups").doc(groupId).update({
                     users: filtUsers,
