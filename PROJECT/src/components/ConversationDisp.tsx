@@ -4,6 +4,7 @@ import AppContext, { Conversation, defaultUserData, Message, UserData } from '..
 import { IonButton, IonCol, IonContent, IonFab, IonFabButton, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonRow, IonTitle } from '@ionic/react';
 import { arrowDownCircle, sendSharp } from 'ionicons/icons';
 import './ConversationDisp.scss'
+import { useTranslation } from 'react-i18next';
 
 const ConversationDisp: React.FC<{id: string}> = (props) => {
     const appCtx = useContext(AppContext);
@@ -13,6 +14,9 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 	const [messageValue, setMessageValue] = useState<string>("");
 	const [alterUser, setAlterUser] = useState<UserData>(defaultUserData);
 	const [messages, setMessages] = useState<Message[]>([]);
+
+	const { t } = useTranslation('general');
+
 	function computedate(msg: Message) {
 		let messagedate = msg.sendedAt.toDate()
 		let month = messagedate.getMonth()
@@ -57,7 +61,7 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 		if ( messages.length === 0 ) {
 			return (
 				<IonItem>
-					No messages
+					{t('Group.noMessage')}
 				</IonItem>
 			)
 		} else {
@@ -130,7 +134,7 @@ const ConversationDisp: React.FC<{id: string}> = (props) => {
 				<form>
 					<IonItem>
 						<IonLabel>Message : </IonLabel>
-						<IonInput placeholder="Enter a gentle message" value={messageValue} onIonChange={(e) => setMessageValue(e.detail.value!)} />
+						<IonInput placeholder={t('Conv.enterMessage')} value={messageValue} onIonChange={(e) => setMessageValue(e.detail.value!)} />
 					</IonItem>
 					<IonItem>
 						<IonButton disabled={!(messageValue.trim().length > 1)} onClick={() => handleSendMessage(conv.convId, messageValue)} size="large" fill="clear">

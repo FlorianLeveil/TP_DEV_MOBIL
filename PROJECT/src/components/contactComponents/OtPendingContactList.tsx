@@ -6,10 +6,12 @@ import defaultProfile from '../../assets/defaultProfile.jpg';
 import AppContext from '../../data/app-context';
 
 import { checkmarkOutline, closeOutline } from 'ionicons/icons';
+import { useTranslation } from 'react-i18next';
 
 const OtPendingContactList: React.FC = () => {
     const appCtx = useContext(AppContext);
     const [otContactList, setContactList] = useState<firebase.firestore.DocumentData[]>([]);
+	const { t } = useTranslation('general');
 
     useEffect(() => {
         setContactList([]);
@@ -31,7 +33,7 @@ const OtPendingContactList: React.FC = () => {
             return (
                 <IonItem>
                     <IonLabel>
-                        Aucunes demandes pour l'instant.
+                        {t('Contact.noRequest')}
                     </IonLabel>
                 </IonItem>
             )
@@ -61,7 +63,7 @@ const OtPendingContactList: React.FC = () => {
     return (
         <IonList>
             <IonListHeader>
-                <IonLabel>Demande(s) de contact</IonLabel>
+                <IonLabel>{t('Contact.requestReceived')}</IonLabel>
             </IonListHeader>
             {
                 showOtPendingList()

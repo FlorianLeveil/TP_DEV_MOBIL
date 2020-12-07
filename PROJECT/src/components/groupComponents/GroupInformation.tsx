@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import AppContext, { Group } from '../../data/app-context';
 import firebase from "../../firebase";
 import defaultProfile from '../../assets/defaultProfile.jpg';
+import { useTranslation } from 'react-i18next';
 
 interface oui {
     [key: string]: firebase.firestore.DocumentData;
@@ -18,6 +19,8 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
 
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<string>("");
+
+    const { t } = useTranslation('general');
 
     useEffect(() => {
         setContactList([]);
@@ -57,7 +60,7 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
             return (
                 <IonItem>
                     <IonLabel>
-                        Pas encore de contact :( 
+                        {t('Contact.noContact')}
                     </IonLabel>
                 </IonItem>
             )
@@ -84,7 +87,7 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
             return (
                 <IonItem>
                     <IonLabel>
-                        Pas encore de contact :( 
+                    {t('Contact.noContact')}
                     </IonLabel>
                 </IonItem>
             )
@@ -111,7 +114,7 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
             return (
                 <IonItem>
                     <IonLabel>
-                        Pas encore de contact :( 
+                    {t('Contact.noContact')}
                     </IonLabel>
                 </IonItem>
             )
@@ -203,10 +206,10 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                     >
                         <IonHeader translucent>
                             <IonToolbar>
-                                <IonTitle>Add User</IonTitle>
+                                <IonTitle>{t('Group.addUser')}</IonTitle>
                                 <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                     setShowModal(false)
-                                }}>Retour</IonButton>
+                                }}>{t('Conv.return')}</IonButton>
                             </IonToolbar>
                         </IonHeader>
                         <IonContent>
@@ -229,10 +232,10 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                     >
                         <IonHeader translucent>
                             <IonToolbar>
-                                    <IonTitle>Remove User</IonTitle>
+                                    <IonTitle>{t('Group.removeUser')}</IonTitle>
                                     <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                         setShowModal(false)
-                                    }}>Retour</IonButton>
+                                    }}>{t('Conv.return')}</IonButton>
                             </IonToolbar>
                         </IonHeader>
                         <IonContent>
@@ -241,7 +244,7 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                             }
                         </IonContent>
                         <IonFab vertical="bottom" slot="fixed" horizontal="center">
-                                <IonFabButton color="danger" onClick={() => handleRemoveFromGroup()}>Remove</IonFabButton>
+                                <IonFabButton color="danger" onClick={() => handleRemoveFromGroup()}>{t('Group.remove')}</IonFabButton>
                             </IonFab>
                         </IonModal>
                 )
@@ -253,10 +256,10 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                     >
                         <IonHeader translucent>
                             <IonToolbar>
-                                    <IonTitle>Elevate User</IonTitle>
+                                    <IonTitle>{t('Group.elevateUser')}</IonTitle>
                                     <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                         setShowModal(false)
-                                    }}>Retour</IonButton>
+                                    }}>{t('Conv.return')}</IonButton>
                             </IonToolbar>
                         </IonHeader>
                         <IonContent>
@@ -279,10 +282,10 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                     >
                         <IonHeader translucent>
                             <IonToolbar>
-                                    <IonTitle>Retrograde User</IonTitle>
+                                    <IonTitle>{t('Group.retrogadeUser')}</IonTitle>
                                     <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                         setShowModal(false)
-                                    }}>Retour</IonButton>
+                                    }}>{t('Conv.return')}</IonButton>
                             </IonToolbar>
                         </IonHeader>
                         <IonContent>
@@ -293,7 +296,7 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                             </IonRadioGroup>
                         </IonContent>
                         <IonFab vertical="bottom" slot="fixed" horizontal="center">
-                            <IonFabButton color="warning" onClick={() => handleDemote()}>Demote</IonFabButton>
+                            <IonFabButton color="warning" onClick={() => handleDemote()}>{t('demote')}</IonFabButton>
                         </IonFab>
                     </IonModal>
                 )
@@ -305,10 +308,10 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                     >
                         <IonHeader translucent>
                             <IonToolbar>
-                                    <IonTitle>Delete groupe</IonTitle>
+                                    <IonTitle>{t('Group.deleteGroup')}</IonTitle>
                                     <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                         setShowModal(false)
-                                    }}>Retour</IonButton>
+                                    }}>{t('Conv.return')}</IonButton>
                             </IonToolbar>
                         </IonHeader>
                         <IonFab vertical="bottom" slot="fixed" horizontal="center">
@@ -324,14 +327,14 @@ const GroupInformationItem: React.FC<{action: string, text: string, group: Group
                     >
                         <IonHeader translucent>
                             <IonToolbar>
-                                    <IonTitle>Quitter le groupe</IonTitle>
+                                    <IonTitle>{t('Group.quitGroup')}</IonTitle>
                                     <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                         setShowModal(false)
                                     }}>Retour</IonButton>
                             </IonToolbar>
                         </IonHeader>
                         <IonFab vertical="bottom" slot="fixed" horizontal="center">
-                            <IonFabButton color="danger" onClick={() => appCtx.quitGroup(props.group.groupId)}>Quitter la conversation</IonFabButton>
+                            <IonFabButton color="danger" onClick={() => appCtx.quitGroup(props.group.groupId)}>{t('Conv.quitConv')}</IonFabButton>
                         </IonFab>
                     </IonModal>
                 )

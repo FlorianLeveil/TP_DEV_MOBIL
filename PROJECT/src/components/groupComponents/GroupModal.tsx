@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../../data/app-context';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import firebase from '../../firebase';
+import { useTranslation } from 'react-i18next';
 
 const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) => void }> = (props) => {
     const appCtx = useContext(AppContext);
@@ -14,6 +15,7 @@ const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) 
     const [contacts, setContacts] = useState<string[]>([]);
     const [messageValue, setMessageValue] = useState<string>("");
     const [groupName, setGroupName] = useState<string>("");
+    const { t } = useTranslation('general');
 
     const placeholderFirstMessage = "Un grand merci à " + appCtx.userdata.username + " pour avoir créée le groupe !"
 
@@ -74,7 +76,7 @@ const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) 
             return (
                 <IonItem>
                     <IonLabel>
-                        Aucun résultats :'(
+                        {t('Conv.noResult')}
                     </IonLabel>
                 </IonItem>
             )
@@ -105,24 +107,24 @@ const GroupModal: React.FC<{ showModal: boolean, setShowModal: (value: boolean) 
                 <form>
                     <IonHeader translucent>
                         <IonToolbar>
-                                <IonTitle>Création de groupe</IonTitle>
+                                <IonTitle>{t('Group.creation')}</IonTitle>
                                 <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                     props.setShowModal(false)
-                                }}>Retour</IonButton>
+                                }}>{t('Conv.return')}</IonButton>
                         </IonToolbar>
                     </IonHeader>
 
                     <IonContent fullscreen>
                         <IonList>
                             <IonItem>
-                                <IonLabel><h2>Nom du groupe :</h2></IonLabel>
+                                <IonLabel><h2>{t('Group.name')}</h2></IonLabel>
                                 <IonInput placeholder="Nom du groupe" value={groupName} onIonChange={(e) => setGroupName(e.detail.value!)} />
-                                <IonLabel position="stacked"><h2>Premier message :</h2></IonLabel>
+                                <IonLabel position="stacked"><h2>{t('Group.firstMessage')}</h2></IonLabel>
                                 <IonTextarea value={messageValue} defaultValue={placeholderFirstMessage} placeholder={placeholderFirstMessage} onIonChange={(e) => setMessageValue(e.detail.value!)}></IonTextarea>
                             </IonItem>
                         </IonList>
                         <IonList>
-                            <IonListHeader>Ajouter des membres</IonListHeader>
+                            <IonListHeader>{t('Group.addMember')}</IonListHeader>
                             {
                                 fillResults()
                             }

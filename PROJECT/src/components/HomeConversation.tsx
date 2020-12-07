@@ -7,6 +7,7 @@ import firebase from '../firebase';
 import { fromDate } from '../helpers/dateHelper';
 
 import { ROUTE_CONVERSATION, ROUTE_GROUP } from '../nav/Routes';
+import { useTranslation } from 'react-i18next';
 
 interface oui {
     [key: string]: firebase.firestore.DocumentData;
@@ -18,6 +19,7 @@ const HomeConversation: React.FC = () => {
     const db = firebase.firestore();
     const [users, setUsers] = useState<oui>({});
     const [listGroups, setListGroups] = useState<Group[]>([]);
+    const { t } = useTranslation('general');
 
     useEffect(() => {
         try {
@@ -76,7 +78,7 @@ const HomeConversation: React.FC = () => {
             return (
                 <IonItem>
                     <IonLabel>
-                        Let's start writing a good story :)
+                        {t('Conv.letsStart')}
                     </IonLabel>
                 </IonItem>
             )

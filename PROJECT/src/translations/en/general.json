@@ -2,9 +2,10 @@
     "Conv" : {
         "noResult" : "No result",
         "contactSearch" : "Contact Search",
-        "return" : "Return",
+        "return" : "RETURN",
         "enterMessage" : "Enter a Gentle Message",
-        "letsStart" : "Let's start writing a good story :)"
+        "letsStart" : "Let's start writing a good story :)",
+        "quitConv" : "Quit Conversation"
     },
     "Contact" : {
         "noResult" :"No Result",
@@ -17,6 +18,28 @@
         "noRequest" : "No request for the moment",
         "requestSent" : "Contact Request Sent",
         "requestReceived" : "Contact Request"
+    },
+    "Group" : {
+        "noGroupAdded" : "No groups added you for now",
+        "quit" : "Quit",
+        "list" : "Group list",
+        "notCreate" : "You did not create a group",
+        "delete" : "Delete",
+        "iCreate" : "Group I created",
+        "creation" : "Group creation",
+        "name" : "Group Name :",
+        "firstMessage" : "First Message",
+        "addMember" : "Add Member",
+        "create" : "Created",
+        "addUser" : "Add User",
+        "removeUser" : "Remove User",
+        "remove" : "Remove",
+        "elevateUser" : "Elevate User",
+        "retrogadeUser" : "Retrograde User",
+        "demote" : "Demote",
+        "deleteGroup" : "Delete Group",
+        "quitGroup" : "Quit group",
+        "noMessage" : "No message"
     },
     "loading" : "Please wait ..."
 }

@@ -4,12 +4,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import AppContext from '../../data/app-context';
 import ContactAddUserModal from './ContactAddUserModal';
+import { useTranslation } from 'react-i18next';
 
 const ContactList: React.FC = () => {
     const appCtx = useContext(AppContext);
     const [showModal, setShowModal] = useState(false);
     const [showLoading, setShowLoading] = useState<boolean>(false);
     const [contactList, setContactList] = useState<firebase.firestore.DocumentData[]>([]);
+
+    const { t } = useTranslation('general');
 
     useEffect(() => {
         setContactList([]);
@@ -31,7 +34,7 @@ const ContactList: React.FC = () => {
             return (
                 <IonItem>
                     <IonLabel>
-                        Pas encore de contact :( 
+                        {t('Contact.noContact')} 
                     </IonLabel>
                 </IonItem>
             )
@@ -49,7 +52,7 @@ const ContactList: React.FC = () => {
                         <IonButton color="danger" size="default" onClick={() => {
                             setShowLoading(true);
                             appCtx.removeContact(value.data()?.uid)
-                        }}>Supprimer</IonButton>
+                        }}>{t('Group.delete')}</IonButton>
                     </IonItem>
                 )
             })

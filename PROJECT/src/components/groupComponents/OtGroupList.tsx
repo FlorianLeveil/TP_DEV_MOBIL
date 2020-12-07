@@ -5,12 +5,14 @@ import AppContext, { Group } from '../../data/app-context';
 import { ROUTE_GROUP } from '../../nav/Routes';
 import { useHistory } from 'react-router';
 import defaultProfile from '../../assets/defaultProfile.jpg';
+import { useTranslation } from 'react-i18next';
 
 
 const OtGroupList: React.FC = () => {
 	const appCtx = useContext(AppContext);
 	const history = useHistory();
     const [otGroups, setOtGroups] = useState<Group[]>([]);
+    const { t } = useTranslation('general');
     
     useEffect(() => {
 		firebase.firestore().collection("Groups").where("users", "array-contains", appCtx.userdata.uid)
@@ -33,7 +35,7 @@ const OtGroupList: React.FC = () => {
 			return (
 				<IonItem>
 					<IonLabel>
-						No groups added you for now
+						{t('Group.noGroupAdded')}
 					</IonLabel>
 				</IonItem>
 			)
@@ -46,11 +48,11 @@ const OtGroupList: React.FC = () => {
                             </IonAvatar>
                             <IonLabel>
                                 <h2>{grp.groupName}</h2>
-                                <p>{grp.users.length} participants</p>
+                                <p>{grp.users.length} participant</p>
                             </IonLabel>
                             <IonButton color="danger" size="default" onClick={() => {
                                 appCtx.quitGroup(grp.groupId)
-                            }}>Quitter</IonButton>
+                            }}>{t('Group.quit')}</IonButton>
                         </IonItem>
                 )
             })
@@ -60,7 +62,7 @@ const OtGroupList: React.FC = () => {
     return (
         <IonList>
                 <IonListHeader >
-                    <IonLabel>Liste des Groupe(s)</IonLabel>
+                    <IonLabel>{t('Group.list')}</IonLabel>
                 </IonListHeader>
             {
                 fillOtList()

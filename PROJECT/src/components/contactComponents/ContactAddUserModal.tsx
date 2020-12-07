@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import AppContext from '../../data/app-context';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import firebase from '../../firebase';
+import { useTranslation } from 'react-i18next';
 
 
 const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: boolean) => void }> = (props) => {
@@ -11,6 +12,8 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
     const [searchData, setSearchData] = useState<firebase.firestore.DocumentData[]>([])
     const [searchText, setSearchText] = useState('');
     const [searchOpti, setSearchOpti] = useState('email');
+
+    const { t } = useTranslation('general');
 
     setTimeout(() => {
         setShowLoading(false);
@@ -30,7 +33,7 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
             return (
                 <IonItem>
                     <IonLabel>
-                        Aucun résultats :'(
+                        {t('Contact.noContact')}
                     </IonLabel>
                 </IonItem>
             )
@@ -61,7 +64,7 @@ const ContactAddUserModal: React.FC<{ showModal: boolean,setShowModal: (value: b
                             setSearchData([]);
                             props.setShowModal(false);
                         }} >
-                            Ajouter
+                            {t('Contact.add')}
                         </IonButton>
                     </IonItem>
                 )

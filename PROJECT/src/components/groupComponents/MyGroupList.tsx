@@ -5,11 +5,14 @@ import AppContext, { Group } from '../../data/app-context';
 import { ROUTE_GROUP } from '../../nav/Routes';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
+
 
 const MyGroupList: React.FC = () => {
     const appCtx = useContext(AppContext);
     const history = useHistory();
     const [myGroups, setMyGroups] = useState<Group[]>([]);
+    const { t } = useTranslation('general');
     
     useEffect(() => {
 		firebase.firestore().collection("Groups").where("users", "array-contains", appCtx.userdata.uid)
@@ -32,7 +35,7 @@ const MyGroupList: React.FC = () => {
 			return (
 				<IonItem>
 					<IonLabel>
-						Vous n'avez créée de groupe.
+						{t('Group.notCreate')}
 					</IonLabel>
 				</IonItem>
 			)
@@ -45,11 +48,11 @@ const MyGroupList: React.FC = () => {
                             </IonAvatar>
                             <IonLabel>
                                 <h2>{grp.groupName}</h2>
-                                <p>{grp.users.length} participants</p>
+                                <p>{grp.users.length} participant</p>
                             </IonLabel>
                             <IonButton color="danger" size="default" onClick={() => {
                                 appCtx.deleteGroup(grp.groupId)
-                            }}>Supprimer</IonButton>
+                            }}>{t('Group.delete')}</IonButton>
                         </IonItem>
                 )
             })
@@ -59,7 +62,7 @@ const MyGroupList: React.FC = () => {
     return (
         <IonList>
             <IonListHeader>
-                <IonLabel>Groupe(s) que j'ai créée</IonLabel>
+                <IonLabel>{t('Group.iCreate')}</IonLabel>
             </IonListHeader>
             {
                 fillMyList()

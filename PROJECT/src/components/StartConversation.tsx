@@ -4,6 +4,7 @@ import AppContext from '../data/app-context';
 import defaultProfile from '../assets/defaultProfile.jpg';
 import firebase from '../firebase';
 import { sendSharp } from 'ionicons/icons';
+import { useTranslation } from 'react-i18next';
 
 
 const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boolean) => void }> = (props) => {
@@ -12,6 +13,7 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
     const [searchData, setSearchData] = useState<firebase.firestore.DocumentData[]>([]);
     const [messageValue, setMessageValue] = useState<string>("");
     const [contact, setContact] = useState<string>("");
+    const { t } = useTranslation('general');
 
     useEffect(() => {
         if (!appCtx.userdata.contact) return;
@@ -81,10 +83,10 @@ const StartConversation: React.FC<{ showModal: boolean,setShowModal: (value: boo
             <IonModal isOpen={props.showModal} backdropDismiss={false}>
                 <IonHeader translucent>
                     <IonToolbar>
-                            <IonTitle>Recherche Contact</IonTitle>
+                            <IonTitle>{t('Conv.contactSearch')}</IonTitle>
                             <IonButton slot="end" type="reset" fill="clear" onClick={() => {
                                 props.setShowModal(false)
-                            }}>Retour</IonButton>
+                            }}>{t('Conv.return')}</IonButton>
                     </IonToolbar>
                 </IonHeader>
 

@@ -4,6 +4,7 @@ import AppContext, { Group, Message } from '../../data/app-context';
 import { IonButton, IonContent, IonFooter, IonIcon, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPopover, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
 import { ellipsisHorizontalSharp, sendSharp } from 'ionicons/icons';
 import GroupInformationItem from './GroupInformation';
+import { useTranslation } from 'react-i18next';
 
 interface oui {
     [key: string]: firebase.firestore.DocumentData;
@@ -17,6 +18,7 @@ const GroupConv: React.FC<{id: string}> = (props) => {
 	const [messageValue, setMessageValue] = useState<string>("");
 	const [users, setUsers] = useState<oui>({});
 	const [messages, setMessages] = useState<Message[]>([]);
+	const { t } = useTranslation('general');
 
 	const [showPopover, setShowPopover] = useState(false);
 
@@ -57,7 +59,7 @@ const GroupConv: React.FC<{id: string}> = (props) => {
 		if ( messages.length === 0 ) {
 			return (
 				<IonItem>
-					No messages
+					{t('Group.noMessage')}
 				</IonItem>
 			)
 		} else {
